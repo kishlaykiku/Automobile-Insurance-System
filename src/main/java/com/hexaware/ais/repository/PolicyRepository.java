@@ -1,8 +1,10 @@
 package com.hexaware.ais.repository;
 
 import com.hexaware.ais.entity.Policy;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
 
 /*
  * @Author: Kishlay Kumar

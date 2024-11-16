@@ -5,6 +5,7 @@ import com.hexaware.ais.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+
 /*
  * @Author: Kishlay Kumar
  * Class: Repository for User entity.
