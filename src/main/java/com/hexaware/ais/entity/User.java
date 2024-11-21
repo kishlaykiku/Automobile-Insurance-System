@@ -6,8 +6,9 @@ import java.util.UUID;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
+
 /*
- * @Author: Kishlay Kumar 
+ * @Author: Kishlay Kumar
  * Class: User Entity
  * Description: This class is used to represent the User entity
  * Map: It is mapped to the `user` table in the database

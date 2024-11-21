@@ -5,6 +5,7 @@ import java.util.UUID;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
+
 /*
  * @Author: Kishlay Kumar
  * Class: Vehicle Entity

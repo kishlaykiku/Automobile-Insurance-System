@@ -27,7 +27,7 @@ public class PolicyController {
     /******************************************* Endpoints *******************************************/
 
     // Create a new policy
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Policy> createPolicy(@RequestBody Policy policy) {
 
         Policy createdPolicy = policyService.createPolicy(policy);

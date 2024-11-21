@@ -7,6 +7,8 @@ import com.hexaware.ais.entity.User;
 import com.hexaware.ais.repository.UserRepository;
 import com.hexaware.ais.service.IUserService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,8 @@ public class UserServiceImpl implements IUserService {
 
     /******************************************* Dependencies *******************************************/
 
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
     @Autowired
     private UserRepository userRepository;
 
@@ -29,13 +33,21 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User createUser(User user) {
 
+        logger.info("Creating user with email: {}", user.getEmail());
+
         return userRepository.save(user);
     }
 
     @Override
     public User getUserById(String userId) {
 
+        logger.debug("Fetching user with ID: {}", userId);
+
         Optional<User> user = userRepository.findById(userId);
+
+        if (user.isEmpty()) {
+            logger.error("User with ID {} not found", userId);
+        }
 
         return user.orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
     }
@@ -43,13 +55,17 @@ public class UserServiceImpl implements IUserService {
     @Override
     public List<User> getAllUsers() {
 
+        logger.info("Fetching all users");
+
         return userRepository.findAll();
     }
 
     @Override
     public User updateUser(String userId, User updatedUser) {
 
-        User existingUser = getUserById(userId); // Reuse method to check existence
+        logger.info("Updating user with ID: {}", userId);
+
+        User existingUser = getUserById(userId);
 
         existingUser.setName(updatedUser.getName());
         existingUser.setEmail(updatedUser.getEmail());
@@ -64,6 +80,8 @@ public class UserServiceImpl implements IUserService {
     @Override
     public void deleteUser(String userId) {
 
+        logger.info("Deleting user with ID: {}", userId);
+
         User existingUser = getUserById(userId);
 
         userRepository.delete(existingUser);
@@ -71,6 +89,8 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User findByEmail(String email) {
+
+        logger.debug("Fetching user with email: {}", email);
 
         return userRepository.findByEmail(email);
     }
