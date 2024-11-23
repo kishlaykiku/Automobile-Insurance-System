@@ -35,6 +35,9 @@ public class Proposal {
     @Column(name = "additional_docs")
     private String additionalDocs;
 
+    @Column(name = "remarks")
+    private String remarks;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -92,6 +95,14 @@ public class Proposal {
     }
     public void setAdditionalDocs(String additionalDocs) {
         this.additionalDocs = additionalDocs;
+    }
+
+    // Getter and Setter for remarks
+    public String getRemarks() {
+        return remarks;
+    }
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 
     // Getter and Setter for user

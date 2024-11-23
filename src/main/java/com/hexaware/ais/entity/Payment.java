@@ -1,6 +1,5 @@
 package com.hexaware.ais.entity;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -27,7 +26,7 @@ public class Payment {
     @NotNull(message = "Amount is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Amount must be greater than 0")
     @Column(name = "amount", nullable = false)
-    private BigDecimal amount;
+    private double amount;
 
     @NotNull(message = "Payment date is required")
     @PastOrPresent(message = "Payment date cannot be in the future")
@@ -53,6 +52,8 @@ public class Payment {
 
             this.paymentId = UUID.randomUUID().toString();
         }
+        this.paymentDate = LocalDate.now();
+        this.status = "Pending";
     }
 
     /******************************************* Getters and Setters *******************************************/
@@ -66,10 +67,10 @@ public class Payment {
     }
 
     // Getter and Setter for amount
-    public BigDecimal getAmount() {
+    public double getAmount() {
         return amount;
     }
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 

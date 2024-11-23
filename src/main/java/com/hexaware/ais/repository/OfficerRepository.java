@@ -14,5 +14,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OfficerRepository extends JpaRepository<Officer, String> {
 
+    // [SELECT * FROM officer WHERE email = ?]
     Officer findByEmail(String email);
 }

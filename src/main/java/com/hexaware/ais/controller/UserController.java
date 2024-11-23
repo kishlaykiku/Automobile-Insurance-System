@@ -27,7 +27,7 @@ public class UserController {
     /******************************************* Endpoints *******************************************/
 
     // Create a new user
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<User> createUser(@RequestBody User user) {
 
         User createdUser = userService.createUser(user);
@@ -36,7 +36,7 @@ public class UserController {
     }
 
     // Get a user by ID
-    @GetMapping("/{userId}")
+    @GetMapping("/get/{userId}")
     public ResponseEntity<User> getUserById(@PathVariable String userId) {
 
         User user = userService.getUserById(userId);
@@ -45,7 +45,7 @@ public class UserController {
     }
 
     // Get all users
-    @GetMapping
+    @GetMapping("/getall")
     public ResponseEntity<List<User>> getAllUsers() {
 
         List<User> users = userService.getAllUsers();
@@ -54,7 +54,7 @@ public class UserController {
     }
 
     // Update a user
-    @PutMapping("/{userId}")
+    @PutMapping("/update/{userId}")
     public ResponseEntity<User> updateUser(@PathVariable String userId, @RequestBody User user) {
 
         User updatedUser = userService.updateUser(userId, user);
@@ -63,7 +63,7 @@ public class UserController {
     }
 
     // Delete a user
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/delete/{userId}")
     public ResponseEntity<String> deleteUser(@PathVariable String userId) {
 
         userService.deleteUser(userId);
@@ -72,7 +72,7 @@ public class UserController {
     }
 
     // Find a user by email
-    @GetMapping("/email/{email}")
+    @GetMapping("/get/user-by-email/{email}")
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
 
         User user = userService.findByEmail(email);

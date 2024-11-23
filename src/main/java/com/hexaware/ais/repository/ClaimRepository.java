@@ -16,5 +16,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ClaimRepository extends JpaRepository<Claim, String> {
 
+    // [SELECT * FROM claim WHERE proposal_id = ?]
     List<Claim> findByProposalProposalId(String proposalId);
 }

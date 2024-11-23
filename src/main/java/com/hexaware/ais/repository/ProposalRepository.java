@@ -16,5 +16,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProposalRepository extends JpaRepository<Proposal, String> {
 
+    // [SELECT * FROM proposal WHERE user_id = ?]
     List<Proposal> findByUserUserId(String userId);
 }

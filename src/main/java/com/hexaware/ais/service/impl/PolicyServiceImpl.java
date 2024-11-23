@@ -1,5 +1,6 @@
 package com.hexaware.ais.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +48,12 @@ public class PolicyServiceImpl implements IPolicyService {
     }
 
     @Override
+    public long getActivePolicyCount() {
+
+        return policyRepository.countByStatus("Active");
+    }
+
+    @Override
     public Policy updatePolicy(String policyId, Policy updatedPolicy) {
 
         Policy existingPolicy = getPolicyById(policyId);
@@ -71,5 +78,31 @@ public class PolicyServiceImpl implements IPolicyService {
         Policy existingPolicy = getPolicyById(policyId);
 
         policyRepository.delete(existingPolicy);
+    }
+
+    @Override
+    public List<Policy> getPoliciesByUserId(String userId) {
+
+        return policyRepository.findPoliciesByUserId(userId);
+    }
+
+    @Override
+    public List<Policy> sendPremiumReminders() {
+
+        LocalDate today = LocalDate.now();
+        LocalDate oneWeekLater = today.plusWeeks(1);
+
+        List<Policy> expiringPolicies = policyRepository.findByEndDateBetweenAndReminderSentFalse(today, oneWeekLater);
+
+        for (Policy policy : expiringPolicies) {
+
+            policy.setReminderSent(true);
+            policy.setStatus("Reminder Sent");
+            policyRepository.save(policy);
+
+            System.out.println("Reminder sent for policy: " + policy.getPolicyNo() + ", Expiry Date: " + policy.getEndDate());
+        }
+
+        return expiringPolicies;
     }
 }

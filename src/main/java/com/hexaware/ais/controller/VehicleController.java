@@ -2,7 +2,7 @@ package com.hexaware.ais.controller;
 
 import java.util.List;
 
-import com.hexaware.ais.entity.Vehicle;
+import com.hexaware.ais.dto.VehicleDTO;
 import com.hexaware.ais.service.IVehicleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,52 +27,52 @@ public class VehicleController {
     /******************************************* Endpoints *******************************************/
 
     // Create a new vehicle
-    @PostMapping
-    public ResponseEntity<Vehicle> createVehicle(@RequestBody Vehicle vehicle) {
+    @PostMapping("/create")
+    public ResponseEntity<VehicleDTO> createVehicle(@RequestBody VehicleDTO vehicleDTO) {
 
-        Vehicle createdVehicle = vehicleService.createVehicle(vehicle);
+        VehicleDTO createdVehicle = vehicleService.createVehicle(vehicleDTO);
 
         return ResponseEntity.ok(createdVehicle);
     }
 
     // Get a vehicle by ID
-    @GetMapping("/{vehicleId}")
-    public ResponseEntity<Vehicle> getVehicleById(@PathVariable String vehicleId) {
+    @GetMapping("/get/{vehicleId}")
+    public ResponseEntity<VehicleDTO> getVehicleById(@PathVariable String vehicleId) {
 
-        Vehicle vehicle = vehicleService.getVehicleById(vehicleId);
+        VehicleDTO vehicle = vehicleService.getVehicleById(vehicleId);
 
         return ResponseEntity.ok(vehicle);
     }
 
     // Get all vehicles
-    @GetMapping
-    public ResponseEntity<List<Vehicle>> getAllVehicles() {
+    @GetMapping("/getall")
+    public ResponseEntity<List<VehicleDTO>> getAllVehicles() {
 
-        List<Vehicle> vehicles = vehicleService.getAllVehicles();
+        List<VehicleDTO> vehicles = vehicleService.getAllVehicles();
 
         return ResponseEntity.ok(vehicles);
     }
 
     // Get vehicles by user ID
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Vehicle>> getVehiclesByUserId(@PathVariable String userId) {
+    @GetMapping("/get/vehicle-by-user/{userId}")
+    public ResponseEntity<List<VehicleDTO>> getVehiclesByUserId(@PathVariable String userId) {
 
-        List<Vehicle> vehicles = vehicleService.getVehiclesByUserId(userId);
+        List<VehicleDTO> vehicles = vehicleService.getVehiclesByUserId(userId);
 
         return ResponseEntity.ok(vehicles);
     }
 
     // Update a vehicle
-    @PutMapping("/{vehicleId}")
-    public ResponseEntity<Vehicle> updateVehicle(@PathVariable String vehicleId, @RequestBody Vehicle vehicle) {
+    @PutMapping("/update/{vehicleId}")
+    public ResponseEntity<VehicleDTO> updateVehicle(@PathVariable String vehicleId, @RequestBody VehicleDTO vehicle) {
 
-        Vehicle updatedVehicle = vehicleService.updateVehicle(vehicleId, vehicle);
+        VehicleDTO updatedVehicle = vehicleService.updateVehicle(vehicleId, vehicle);
 
         return ResponseEntity.ok(updatedVehicle);
     }
 
     // Delete a vehicle
-    @DeleteMapping("/{vehicleId}")
+    @DeleteMapping("/delete/{vehicleId}")
     public ResponseEntity<String> deleteVehicle(@PathVariable String vehicleId) {
 
         vehicleService.deleteVehicle(vehicleId);

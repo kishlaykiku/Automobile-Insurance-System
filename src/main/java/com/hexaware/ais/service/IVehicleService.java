@@ -2,7 +2,7 @@ package com.hexaware.ais.service;
 
 import java.util.List;
 
-import com.hexaware.ais.entity.Vehicle;
+import com.hexaware.ais.dto.VehicleDTO;
 
 
 /*
@@ -15,19 +15,19 @@ public interface IVehicleService {
     /******************************************* Method Signatures *******************************************/
 
     // Create a new vehicle
-    Vehicle createVehicle(Vehicle vehicle);
+    VehicleDTO createVehicle(VehicleDTO vehicleDTO);
 
     // Get a vehicle by ID
-    Vehicle getVehicleById(String vehicleId);
+    VehicleDTO getVehicleById(String vehicleId);
 
     // Get all vehicles
-    List<Vehicle> getAllVehicles();
+    List<VehicleDTO> getAllVehicles();
 
     // Get vehicles by user ID
-    List<Vehicle> getVehiclesByUserId(String userId);
+    List<VehicleDTO> getVehiclesByUserId(String userId);
 
     // Update a vehicle
-    Vehicle updateVehicle(String vehicleId, Vehicle vehicle);
+    VehicleDTO updateVehicle(String vehicleId, VehicleDTO vehicleDTO);
 
     // Delete a vehicle
     void deleteVehicle(String vehicleId);

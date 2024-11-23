@@ -31,4 +31,7 @@ public interface IPaymentService {
 
     // Delete a payment
     void deletePayment(String paymentId);
+
+    // Process a payment
+    Payment processPayment(String proposalId, double amount, String paymentMethod);
 }

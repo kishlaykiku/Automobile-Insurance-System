@@ -27,7 +27,7 @@ public class ProposalController {
     /******************************************* Endpoints *******************************************/
 
     // Create a new proposal
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Proposal> createProposal(@RequestBody Proposal proposal) {
 
         Proposal createdProposal = proposalService.createProposal(proposal);
@@ -35,8 +35,17 @@ public class ProposalController {
         return ResponseEntity.ok(createdProposal);
     }
 
+    // Submit a new proposal
+    @PostMapping("/submit-proposal")
+    public ResponseEntity<Proposal> submitProposal(@RequestBody Proposal proposal) {
+
+        Proposal submittedProposal = proposalService.submitProposal(proposal);
+
+        return ResponseEntity.ok(submittedProposal);
+    }
+
     // Get a proposal by ID
-    @GetMapping("/{proposalId}")
+    @GetMapping("/get/{proposalId}")
     public ResponseEntity<Proposal> getProposalById(@PathVariable String proposalId) {
 
         Proposal proposal = proposalService.getProposalById(proposalId);
@@ -45,7 +54,7 @@ public class ProposalController {
     }
 
     // Get all proposals
-    @GetMapping
+    @GetMapping("/getall")
     public ResponseEntity<List<Proposal>> getAllProposals() {
 
         List<Proposal> proposals = proposalService.getAllProposals();
@@ -54,7 +63,7 @@ public class ProposalController {
     }
 
     // Get proposals by user ID
-    @GetMapping("/user/{userId}")
+    @GetMapping("/get/proposal-by-user/{userId}")
     public ResponseEntity<List<Proposal>> getProposalsByUserId(@PathVariable String userId) {
 
         List<Proposal> proposals = proposalService.getProposalsByUserId(userId);
@@ -63,7 +72,7 @@ public class ProposalController {
     }
 
     // Update a proposal
-    @PutMapping("/{proposalId}")
+    @PutMapping("/update/{proposalId}")
     public ResponseEntity<Proposal> updateProposal(@PathVariable String proposalId, @RequestBody Proposal proposal) {
 
         Proposal updatedProposal = proposalService.updateProposal(proposalId, proposal);
@@ -72,11 +81,47 @@ public class ProposalController {
     }
 
     // Delete a proposal
-    @DeleteMapping("/{proposalId}")
+    @DeleteMapping("/delete/{proposalId}")
     public ResponseEntity<String> deleteProposal(@PathVariable String proposalId) {
 
         proposalService.deleteProposal(proposalId);
 
         return ResponseEntity.ok("Proposal deleted successfully");
+    }
+
+    // Approve a proposal
+    @PutMapping("/approve/{proposalId}")
+    public ResponseEntity<Proposal> approveProposal(@PathVariable String proposalId, @RequestParam String remarks) {
+
+        Proposal updatedProposal = proposalService.approveProposal(proposalId, remarks);
+
+        return ResponseEntity.ok(updatedProposal);
+    }
+
+    // Reject a proposal
+    @PutMapping("/reject/{proposalId}")
+    public ResponseEntity<Proposal> rejectProposal(@PathVariable String proposalId, @RequestParam String remarks) {
+
+        Proposal updatedProposal = proposalService.rejectProposal(proposalId, remarks);
+
+        return ResponseEntity.ok(updatedProposal);
+    }
+
+    // Request additional details
+    @PutMapping("/request-details/{proposalId}")
+    public ResponseEntity<Proposal> requestAdditionalDetails(@PathVariable String proposalId, @RequestParam String remarks) {
+
+        Proposal updatedProposal = proposalService.requestAdditionalDetails(proposalId, remarks);
+
+        return ResponseEntity.ok(updatedProposal);
+    }
+
+    // Send a quote for the proposal
+    @PutMapping("/send-quote/{proposalId}")
+    public ResponseEntity<Proposal> sendQuote(@PathVariable String proposalId) {
+
+        Proposal updatedProposal = proposalService.sendQuote(proposalId);
+
+        return ResponseEntity.ok(updatedProposal);
     }
 }

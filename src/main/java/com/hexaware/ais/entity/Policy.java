@@ -1,6 +1,5 @@
 package com.hexaware.ais.entity;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -35,7 +34,7 @@ public class Policy {
     @NotNull(message = "Base premium is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Base premium must be greater than 0")
     @Column(name = "base_premium", nullable = false)
-    private BigDecimal basePremium;
+    private double basePremium;
 
     @Column(name = "features")
     private String features;
@@ -103,10 +102,10 @@ public class Policy {
     }
 
     // Getter and Setter for basePremium
-    public BigDecimal getBasePremium() {
+    public double getBasePremium() {
         return basePremium;
     }
-    public void setBasePremium(BigDecimal basePremium) {
+    public void setBasePremium(double basePremium) {
         this.basePremium = basePremium;
     }
 

@@ -17,6 +17,9 @@ public interface IProposalService {
     // Create a new proposal
     Proposal createProposal(Proposal proposal);
 
+    // Submit a proposal
+    Proposal submitProposal(Proposal proposal);
+
     // Get a proposal by ID
     Proposal getProposalById(String proposalId);
 
@@ -31,4 +34,16 @@ public interface IProposalService {
 
     // Delete a proposal
     void deleteProposal(String proposalId);
+
+    // Approve a proposal
+    Proposal approveProposal(String proposalId, String remarks);
+
+    // Reject a proposal
+    Proposal rejectProposal(String proposalId, String remarks);
+
+    // Request additional details
+    Proposal requestAdditionalDetails(String proposalId, String remarks);
+
+    // Generate and "send" a quote for the proposal
+    Proposal sendQuote(String proposalId);
 }

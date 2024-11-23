@@ -27,7 +27,7 @@ public class ClaimController {
     /******************************************* Endpoints *******************************************/
 
     // Create a new claim
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Claim> createClaim(@RequestBody Claim claim) {
 
         Claim createdClaim = claimService.createClaim(claim);
@@ -36,7 +36,7 @@ public class ClaimController {
     }
 
     // Get a claim by ID
-    @GetMapping("/{claimId}")
+    @GetMapping("/get/{claimId}")
     public ResponseEntity<Claim> getClaimById(@PathVariable String claimId) {
 
         Claim claim = claimService.getClaimById(claimId);
@@ -45,7 +45,7 @@ public class ClaimController {
     }
 
     // Get all claims
-    @GetMapping
+    @GetMapping("/getall")
     public ResponseEntity<List<Claim>> getAllClaims() {
 
         List<Claim> claims = claimService.getAllClaims();
@@ -54,7 +54,7 @@ public class ClaimController {
     }
 
     // Get claims by proposal ID
-    @GetMapping("/proposal/{proposalId}")
+    @GetMapping("/get/claim-by-proposal/{proposalId}")
     public ResponseEntity<List<Claim>> getClaimsByProposalId(@PathVariable String proposalId) {
 
         List<Claim> claims = claimService.getClaimsByProposalId(proposalId);
@@ -63,7 +63,7 @@ public class ClaimController {
     }
 
     // Update a claim
-    @PutMapping("/{claimId}")
+    @PutMapping("/update/{claimId}")
     public ResponseEntity<Claim> updateClaim(@PathVariable String claimId, @RequestBody Claim claim) {
 
         Claim updatedClaim = claimService.updateClaim(claimId, claim);
@@ -72,7 +72,7 @@ public class ClaimController {
     }
 
     // Delete a claim
-    @DeleteMapping("/{claimId}")
+    @DeleteMapping("/delete/{claimId}")
     public ResponseEntity<String> deleteClaim(@PathVariable String claimId) {
 
         claimService.deleteClaim(claimId);

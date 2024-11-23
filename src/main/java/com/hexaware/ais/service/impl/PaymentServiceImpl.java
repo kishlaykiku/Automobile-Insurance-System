@@ -1,10 +1,13 @@
 package com.hexaware.ais.service.impl;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import com.hexaware.ais.entity.Payment;
+import com.hexaware.ais.entity.Proposal;
 import com.hexaware.ais.repository.PaymentRepository;
+import com.hexaware.ais.repository.ProposalRepository;
 import com.hexaware.ais.service.IPaymentService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,9 @@ public class PaymentServiceImpl implements IPaymentService {
 
     @Autowired
     private PaymentRepository paymentRepository;
+
+    @Autowired
+    private ProposalRepository proposalRepository;
 
     /******************************************* Methods *******************************************/
 
@@ -72,5 +78,37 @@ public class PaymentServiceImpl implements IPaymentService {
         Payment existingPayment = getPaymentById(paymentId);
 
         paymentRepository.delete(existingPayment);
+    }
+
+    @Override
+    public Payment processPayment(String proposalId, double amount, String paymentMethod) {
+
+        Proposal proposal = proposalRepository.findById(proposalId)
+                .orElseThrow(() -> new RuntimeException("Proposal not found with ID: " + proposalId));
+
+        if (!"Quote Generated".equals(proposal.getStatus())) {
+
+            throw new IllegalStateException("Payment can only be made for proposals with status 'Quote Generated'.");
+        }
+
+        Payment payment = new Payment();
+
+        payment.setProposal(proposal);
+        payment.setAmount(amount);
+        payment.setPaymentMethod(paymentMethod);
+        payment.setPaymentDate(LocalDate.now());
+        payment.setStatus("Completed");
+
+        Payment savedPayment = paymentRepository.save(payment);
+
+        proposal.setStatus("Active");
+        proposal.setRemarks("Policy activated. Payment received via " + paymentMethod + ".");
+
+        proposalRepository.save(proposal);
+
+        System.out.println("Payment received for proposal: " + proposalId);
+        System.out.println("Policy document sent to user: " + proposal.getUser().getEmail());
+
+        return savedPayment;
     }
 }

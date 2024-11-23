@@ -23,9 +23,18 @@ public interface IPolicyService {
     // Get all policies
     List<Policy> getAllPolicies();
 
+    // Fetch statistics
+    long getActivePolicyCount();
+
     // Update a policy
     Policy updatePolicy(String policyId, Policy policy);
 
     // Delete a policy
     void deletePolicy(String policyId);
+
+    // Fetch policies by user ID
+    List<Policy> getPoliciesByUserId(String userId);
+
+    // Sending premium reminders
+    List<Policy> sendPremiumReminders();
 }

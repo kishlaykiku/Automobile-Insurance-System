@@ -1,9 +1,12 @@
 package com.hexaware.ais.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import com.hexaware.ais.entity.Vehicle;
+import com.hexaware.ais.entity.User;
+import com.hexaware.ais.dto.VehicleDTO;
+import com.hexaware.ais.repository.UserRepository;
 import com.hexaware.ais.repository.VehicleRepository;
 import com.hexaware.ais.service.IVehicleService;
 
@@ -24,52 +27,102 @@ public class VehicleServiceImpl implements IVehicleService {
     @Autowired
     private VehicleRepository vehicleRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     /******************************************* Methods *******************************************/
 
     @Override
-    public Vehicle createVehicle(Vehicle vehicle) {
+    public VehicleDTO createVehicle(VehicleDTO vehicleDTO) {
 
-        return vehicleRepository.save(vehicle);
+        if (vehicleDTO.getUserId() == null) {
+
+            throw new IllegalArgumentException("User ID must not be null");
+        }
+
+        User user = userRepository.findById(vehicleDTO.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + vehicleDTO.getUserId()));
+
+        Vehicle vehicle = new Vehicle();
+
+        vehicle.setType(vehicleDTO.getType());
+        vehicle.setModel(vehicleDTO.getModel());
+        vehicle.setRegistrationNo(vehicleDTO.getRegistrationNo());
+        vehicle.setYear(vehicleDTO.getYear());
+        vehicle.setUser(user);
+
+        Vehicle savedVehicle = vehicleRepository.save(vehicle);
+
+        return new VehicleDTO(savedVehicle);
     }
 
     @Override
-    public Vehicle getVehicleById(String vehicleId) {
+    public VehicleDTO getVehicleById(String vehicleId) {
 
-        Optional<Vehicle> vehicle = vehicleRepository.findById(vehicleId);
+        Vehicle vehicle = vehicleRepository.findById(vehicleId)
+                .orElseThrow(() -> new RuntimeException("Vehicle not found with ID: " + vehicleId));
 
-        return vehicle.orElseThrow(() -> new RuntimeException("Vehicle not found with ID: " + vehicleId));
+        return new VehicleDTO(vehicle);
     }
 
     @Override
-    public List<Vehicle> getAllVehicles() {
+    public List<VehicleDTO> getAllVehicles() {
 
-        return vehicleRepository.findAll();
+        List<Vehicle> vehicles = vehicleRepository.findAll();
+        List<VehicleDTO> vehicleDTOs = new ArrayList<>();
+
+        for (Vehicle vehicle : vehicles) {
+
+            vehicleDTOs.add(new VehicleDTO(vehicle));
+        }
+
+        return vehicleDTOs;
     }
 
     @Override
-    public List<Vehicle> getVehiclesByUserId(String userId) {
+    public List<VehicleDTO> getVehiclesByUserId(String userId) {
 
-        return vehicleRepository.findByUserUserId(userId);
+        List<Vehicle> vehicles = vehicleRepository.findByUserUserId(userId);
+        List<VehicleDTO> vehicleDTOs = new ArrayList<>();
+
+        for (Vehicle vehicle : vehicles) {
+
+            vehicleDTOs.add(new VehicleDTO(vehicle));
+        }
+
+        return vehicleDTOs;
     }
 
     @Override
-    public Vehicle updateVehicle(String vehicleId, Vehicle updatedVehicle) {
+    public VehicleDTO updateVehicle(String vehicleId, VehicleDTO vehicleDTO) {
 
-        Vehicle existingVehicle = getVehicleById(vehicleId);
+        Vehicle existingVehicle = vehicleRepository.findById(vehicleId)
+                .orElseThrow(() -> new RuntimeException("Vehicle not found with ID: " + vehicleId));
 
-        existingVehicle.setType(updatedVehicle.getType());
-        existingVehicle.setModel(updatedVehicle.getModel());
-        existingVehicle.setRegistrationNo(updatedVehicle.getRegistrationNo());
-        existingVehicle.setYear(updatedVehicle.getYear());
+        existingVehicle.setType(vehicleDTO.getType());
+        existingVehicle.setModel(vehicleDTO.getModel());
+        existingVehicle.setRegistrationNo(vehicleDTO.getRegistrationNo());
+        existingVehicle.setYear(vehicleDTO.getYear());
 
-        return vehicleRepository.save(existingVehicle);
+        if (vehicleDTO.getUserId() != null) {
+
+            User user = userRepository.findById(vehicleDTO.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found with ID: " + vehicleDTO.getUserId()));
+
+            existingVehicle.setUser(user);
+        }
+
+        Vehicle updatedVehicle = vehicleRepository.save(existingVehicle);
+
+        return new VehicleDTO(updatedVehicle);
     }
 
     @Override
     public void deleteVehicle(String vehicleId) {
 
-        Vehicle existingVehicle = getVehicleById(vehicleId);
+        Vehicle vehicle = vehicleRepository.findById(vehicleId)
+                .orElseThrow(() -> new RuntimeException("Vehicle not found with ID: " + vehicleId));
 
-        vehicleRepository.delete(existingVehicle);
+        vehicleRepository.delete(vehicle);
     }
 }

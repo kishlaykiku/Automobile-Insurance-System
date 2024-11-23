@@ -27,7 +27,7 @@ public class PaymentController {
     /******************************************* Endpoints *******************************************/
 
     // Create a new payment
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Payment> createPayment(@RequestBody Payment payment) {
 
         Payment createdPayment = paymentService.createPayment(payment);
@@ -36,7 +36,7 @@ public class PaymentController {
     }
 
     // Get a payment by ID
-    @GetMapping("/{paymentId}")
+    @GetMapping("/get/{paymentId}")
     public ResponseEntity<Payment> getPaymentById(@PathVariable String paymentId) {
 
         Payment payment = paymentService.getPaymentById(paymentId);
@@ -45,7 +45,7 @@ public class PaymentController {
     }
 
     // Get all payments
-    @GetMapping
+    @GetMapping("/getall")
     public ResponseEntity<List<Payment>> getAllPayments() {
 
         List<Payment> payments = paymentService.getAllPayments();
@@ -54,7 +54,7 @@ public class PaymentController {
     }
 
     // Get payments by proposal ID
-    @GetMapping("/proposal/{proposalId}")
+    @GetMapping("/get/payment-by-proposal/{proposalId}")
     public ResponseEntity<List<Payment>> getPaymentsByProposalId(@PathVariable String proposalId) {
 
         List<Payment> payments = paymentService.getPaymentsByProposalId(proposalId);
@@ -63,7 +63,7 @@ public class PaymentController {
     }
 
     // Update a payment
-    @PutMapping("/{paymentId}")
+    @PutMapping("/update/{paymentId}")
     public ResponseEntity<Payment> updatePayment(@PathVariable String paymentId, @RequestBody Payment payment) {
 
         Payment updatedPayment = paymentService.updatePayment(paymentId, payment);
@@ -72,11 +72,20 @@ public class PaymentController {
     }
 
     // Delete a payment
-    @DeleteMapping("/{paymentId}")
+    @DeleteMapping("/delete/{paymentId}")
     public ResponseEntity<String> deletePayment(@PathVariable String paymentId) {
 
         paymentService.deletePayment(paymentId);
 
         return ResponseEntity.ok("Payment deleted successfully");
+    }
+
+    // Process a payment
+    @PostMapping("/process-pay/{proposalId}")
+    public ResponseEntity<Payment> processPayment(@PathVariable String proposalId, @RequestParam double amount, @RequestParam String paymentMethod) {
+
+        Payment payment = paymentService.processPayment(proposalId, amount, paymentMethod);
+
+        return ResponseEntity.ok(payment);
     }
 }

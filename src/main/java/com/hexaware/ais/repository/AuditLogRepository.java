@@ -16,5 +16,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AuditLogRepository extends JpaRepository<AuditLog, String> {
 
+    // [SELECT * FROM audit_log WHERE entity_type = ?]
     List<AuditLog> findAllByEntityType(String entityType);
 }

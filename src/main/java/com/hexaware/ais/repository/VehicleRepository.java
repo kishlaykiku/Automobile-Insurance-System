@@ -16,5 +16,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, String> {
 
+    // [SELECT * FROM vehicle WHERE user_id = ?]
     List<Vehicle> findByUserUserId(String userId);
 }
