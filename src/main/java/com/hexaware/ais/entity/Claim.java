@@ -1,6 +1,5 @@
 package com.hexaware.ais.entity;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -36,7 +35,7 @@ public class Claim {
     @NotNull(message = "Claim amount is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Claim amount must be greater than 0")
     @Column(name = "amount", nullable = false)
-    private BigDecimal amount;
+    private double amount;
 
     @Column(name = "remarks")
     private String remarks;
@@ -81,10 +80,10 @@ public class Claim {
     }
 
     // Getter and Setter for amount
-    public BigDecimal getAmount() {
+    public double getAmount() {
         return amount;
     }
-    public void setAmount(BigDecimal amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 

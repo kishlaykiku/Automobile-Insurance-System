@@ -3,6 +3,7 @@ package com.hexaware.ais.service;
 import java.util.List;
 
 import com.hexaware.ais.entity.Proposal;
+import com.hexaware.ais.dto.ProposalDTO;;
 
 
 /*
@@ -15,35 +16,35 @@ public interface IProposalService {
     /******************************************* Method Signatures *******************************************/
 
     // Create a new proposal
-    Proposal createProposal(Proposal proposal);
+    ProposalDTO createProposal(Proposal proposal);
 
     // Submit a proposal
-    Proposal submitProposal(Proposal proposal);
+    ProposalDTO submitProposal(Proposal proposal);
 
     // Get a proposal by ID
-    Proposal getProposalById(String proposalId);
+    ProposalDTO getProposalById(String proposalId);
 
     // Get all proposals
-    List<Proposal> getAllProposals();
+    List<ProposalDTO> getAllProposals();
 
     // Get proposals by user ID
-    List<Proposal> getProposalsByUserId(String userId);
+    List<ProposalDTO> getProposalsByUserId(String userId);
 
     // Update a proposal
-    Proposal updateProposal(String proposalId, Proposal proposal);
+    ProposalDTO updateProposal(String proposalId, Proposal proposal);
 
     // Delete a proposal
     void deleteProposal(String proposalId);
 
     // Approve a proposal
-    Proposal approveProposal(String proposalId, String remarks);
+    ProposalDTO approveProposal(String proposalId, String remarks);
 
     // Reject a proposal
-    Proposal rejectProposal(String proposalId, String remarks);
+    ProposalDTO rejectProposal(String proposalId, String remarks);
 
     // Request additional details
-    Proposal requestAdditionalDetails(String proposalId, String remarks);
+    ProposalDTO requestAdditionalDetails(String proposalId, String remarks);
 
     // Generate and "send" a quote for the proposal
-    Proposal sendQuote(String proposalId);
+    ProposalDTO sendQuote(String proposalId);
 }

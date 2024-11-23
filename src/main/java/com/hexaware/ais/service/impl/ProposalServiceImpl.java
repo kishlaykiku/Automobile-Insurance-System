@@ -2,9 +2,9 @@ package com.hexaware.ais.service.impl;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+import java.util.ArrayList;
 
-import com.hexaware.ais.entity.Policy;
+import com.hexaware.ais.dto.ProposalDTO;
 import com.hexaware.ais.entity.Proposal;
 import com.hexaware.ais.repository.ProposalRepository;
 import com.hexaware.ais.service.IProposalService;
@@ -29,67 +29,92 @@ public class ProposalServiceImpl implements IProposalService {
     /******************************************* Methods *******************************************/
 
     @Override
-    public Proposal createProposal(Proposal proposal) {
+    public ProposalDTO createProposal(Proposal proposal) {
 
-        return proposalRepository.save(proposal);
+        Proposal savedProposal = proposalRepository.save(proposal);
+
+        return new ProposalDTO(savedProposal);
     }
 
     @Override
-    public Proposal submitProposal(Proposal proposal) {
+    public ProposalDTO submitProposal(Proposal proposal) {
 
         proposal.setSubmissionDate(LocalDate.now());
-
         proposal.setStatus("Proposal Submitted");
 
-        return proposalRepository.save(proposal);
+        Proposal submittedProposal = proposalRepository.save(proposal);
+
+        return new ProposalDTO(submittedProposal);
     }
 
     @Override
-    public Proposal getProposalById(String proposalId) {
+    public ProposalDTO getProposalById(String proposalId) {
 
-        Optional<Proposal> proposal = proposalRepository.findById(proposalId);
+        Proposal proposal = proposalRepository.findById(proposalId)
+                .orElseThrow(() -> new RuntimeException("Proposal not found with ID: " + proposalId));
 
-        return proposal.orElseThrow(() -> new RuntimeException("Proposal not found with ID: " + proposalId));
+        return new ProposalDTO(proposal);
     }
 
     @Override
-    public List<Proposal> getAllProposals() {
+    public List<ProposalDTO> getAllProposals() {
 
-        return proposalRepository.findAll();
+        List<Proposal> proposals = proposalRepository.findAll();
+        List<ProposalDTO> proposalDTOs = new ArrayList<>();
+
+        for (Proposal proposal : proposals) {
+
+            proposalDTOs.add(new ProposalDTO(proposal));
+        }
+
+        return proposalDTOs;
     }
 
     @Override
-    public List<Proposal> getProposalsByUserId(String userId) {
+    public List<ProposalDTO> getProposalsByUserId(String userId) {
 
-        return proposalRepository.findByUserUserId(userId);
+        List<Proposal> proposals = proposalRepository.findByUserUserId(userId);
+        List<ProposalDTO> proposalDTOs = new ArrayList<>();
+
+        for (Proposal proposal : proposals) {
+
+            proposalDTOs.add(new ProposalDTO(proposal));
+        }
+
+        return proposalDTOs;
     }
 
     @Override
-    public Proposal updateProposal(String proposalId, Proposal updatedProposal) {
+    public ProposalDTO updateProposal(String proposalId, Proposal updatedProposal) {
 
-        Proposal existingProposal = getProposalById(proposalId);
+        Proposal existingProposal = proposalRepository.findById(proposalId)
+                .orElseThrow(() -> new RuntimeException("Proposal not found with ID: " + proposalId));
 
         existingProposal.setSubmissionDate(updatedProposal.getSubmissionDate());
         existingProposal.setStatus(updatedProposal.getStatus());
         existingProposal.setAdditionalDocs(updatedProposal.getAdditionalDocs());
+        existingProposal.setRemarks(updatedProposal.getRemarks());
         existingProposal.setUser(updatedProposal.getUser());
         existingProposal.setVehicle(updatedProposal.getVehicle());
         existingProposal.setPolicy(updatedProposal.getPolicy());
         existingProposal.setOfficer(updatedProposal.getOfficer());
 
-        return proposalRepository.save(existingProposal);
+        Proposal savedProposal = proposalRepository.save(existingProposal);
+
+        return new ProposalDTO(savedProposal);
     }
 
     @Override
     public void deleteProposal(String proposalId) {
 
-        Proposal existingProposal = getProposalById(proposalId);
+        Proposal existingProposal = proposalRepository.findById(proposalId)
+                .orElseThrow(() -> new RuntimeException("Proposal not found with ID: " + proposalId));
 
         proposalRepository.delete(existingProposal);
     }
 
     @Override
-    public Proposal approveProposal(String proposalId, String remarks) {
+    public ProposalDTO approveProposal(String proposalId, String remarks) {
 
         Proposal proposal = proposalRepository.findById(proposalId)
                 .orElseThrow(() -> new RuntimeException("Proposal not found with ID: " + proposalId));
@@ -97,11 +122,13 @@ public class ProposalServiceImpl implements IProposalService {
         proposal.setStatus("Quote Generated");
         proposal.setRemarks(remarks);
 
-        return proposalRepository.save(proposal);
+        Proposal savedProposal = proposalRepository.save(proposal);
+
+        return new ProposalDTO(savedProposal);
     }
 
     @Override
-    public Proposal rejectProposal(String proposalId, String remarks) {
+    public ProposalDTO rejectProposal(String proposalId, String remarks) {
 
         Proposal proposal = proposalRepository.findById(proposalId)
                 .orElseThrow(() -> new RuntimeException("Proposal not found with ID: " + proposalId));
@@ -109,11 +136,13 @@ public class ProposalServiceImpl implements IProposalService {
         proposal.setStatus("Rejected");
         proposal.setRemarks(remarks);
 
-        return proposalRepository.save(proposal);
+        Proposal savedProposal = proposalRepository.save(proposal);
+
+        return new ProposalDTO(savedProposal);
     }
 
     @Override
-    public Proposal requestAdditionalDetails(String proposalId, String remarks) {
+    public ProposalDTO requestAdditionalDetails(String proposalId, String remarks) {
 
         Proposal proposal = proposalRepository.findById(proposalId)
                 .orElseThrow(() -> new RuntimeException("Proposal not found with ID: " + proposalId));
@@ -121,11 +150,13 @@ public class ProposalServiceImpl implements IProposalService {
         proposal.setStatus("Additional Details Requested");
         proposal.setRemarks(remarks);
 
-        return proposalRepository.save(proposal);
+        Proposal savedProposal = proposalRepository.save(proposal);
+
+        return new ProposalDTO(savedProposal);
     }
 
     @Override
-    public Proposal sendQuote(String proposalId) {
+    public ProposalDTO sendQuote(String proposalId) {
 
         Proposal proposal = proposalRepository.findById(proposalId)
                 .orElseThrow(() -> new RuntimeException("Proposal not found with ID: " + proposalId));
@@ -135,27 +166,24 @@ public class ProposalServiceImpl implements IProposalService {
             throw new IllegalStateException("Proposal must have status 'Quote Generated' to send a quote.");
         }
 
-        // Simulation of Premium Calculation
-        Policy policy = proposal.getPolicy();
-        double  basePremium = policy.getBasePremium();
+        double basePremium = proposal.getPolicy().getBasePremium();
         double addOnPremium = 0.0;
 
-        if (policy.getAddOns() != null) {
+        if (proposal.getPolicy().getAddOns() != null) {
 
-            String[] addOns = policy.getAddOns().split(",");
-
+            String[] addOns = proposal.getPolicy().getAddOns().split(",");
             addOnPremium = addOns.length * 500;
         }
 
         double totalPremium = basePremium + addOnPremium;
 
-        // Simulation of sending quote
         System.out.println("Quote sent to user: " + proposal.getUser().getEmail());
         System.out.println("Total Premium: " + totalPremium);
 
-        // Update the proposal remarks with the premium details
         proposal.setRemarks("Quote sent. Total Premium: " + totalPremium);
 
-        return proposalRepository.save(proposal);
+        Proposal savedProposal = proposalRepository.save(proposal);
+
+        return new ProposalDTO(savedProposal);
     }
 }

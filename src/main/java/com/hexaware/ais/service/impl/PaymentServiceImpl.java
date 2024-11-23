@@ -2,10 +2,11 @@ package com.hexaware.ais.service.impl;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+import java.util.ArrayList;
 
 import com.hexaware.ais.entity.Payment;
 import com.hexaware.ais.entity.Proposal;
+import com.hexaware.ais.dto.PaymentDTO;
 import com.hexaware.ais.repository.PaymentRepository;
 import com.hexaware.ais.repository.ProposalRepository;
 import com.hexaware.ais.service.IPaymentService;
@@ -33,55 +34,99 @@ public class PaymentServiceImpl implements IPaymentService {
     /******************************************* Methods *******************************************/
 
     @Override
-    public Payment createPayment(Payment payment) {
+    public PaymentDTO createPayment(PaymentDTO paymentDTO) {
 
-        return paymentRepository.save(payment);
+        Payment payment = new Payment();
+
+        payment.setAmount(paymentDTO.getAmount());
+        payment.setPaymentMethod(paymentDTO.getPaymentMethod());
+        payment.setStatus(paymentDTO.getStatus());
+
+        if (paymentDTO.getProposalId() != null) {
+
+            Proposal proposal = proposalRepository.findById(paymentDTO.getProposalId())
+                    .orElseThrow(() -> new RuntimeException("Proposal not found with ID: " + paymentDTO.getProposalId()));
+
+            payment.setProposal(proposal);
+        }
+
+        Payment savedPayment = paymentRepository.save(payment);
+
+        return new PaymentDTO(savedPayment);
     }
 
     @Override
-    public Payment getPaymentById(String paymentId) {
+    public PaymentDTO getPaymentById(String paymentId) {
 
-        Optional<Payment> payment = paymentRepository.findById(paymentId);
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new RuntimeException("Payment not found with ID: " + paymentId));
 
-        return payment.orElseThrow(() -> new RuntimeException("Payment not found with ID: " + paymentId));
+        return new PaymentDTO(payment);
     }
 
     @Override
-    public List<Payment> getAllPayments() {
+    public List<PaymentDTO> getAllPayments() {
 
-        return paymentRepository.findAll();
+        List<Payment> payments = paymentRepository.findAll();
+        List<PaymentDTO> paymentDTOs = new ArrayList<>();
+
+        for (Payment payment : payments) {
+
+            paymentDTOs.add(new PaymentDTO(payment));
+        }
+
+        return paymentDTOs;
     }
 
     @Override
-    public List<Payment> getPaymentsByProposalId(String proposalId) {
+    public List<PaymentDTO> getPaymentsByProposalId(String proposalId) {
 
-        return paymentRepository.findByProposalProposalId(proposalId);
+        List<Payment> payments = paymentRepository.findByProposalProposalId(proposalId);
+        List<PaymentDTO> paymentDTOs = new ArrayList<>();
+
+        for (Payment payment : payments) {
+
+            paymentDTOs.add(new PaymentDTO(payment));
+        }
+
+        return paymentDTOs;
     }
 
     @Override
-    public Payment updatePayment(String paymentId, Payment updatedPayment) {
+    public PaymentDTO updatePayment(String paymentId, PaymentDTO paymentDTO) {
 
-        Payment existingPayment = getPaymentById(paymentId);
+        Payment existingPayment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new RuntimeException("Payment not found with ID: " + paymentId));
 
-        existingPayment.setAmount(updatedPayment.getAmount());
-        existingPayment.setPaymentDate(updatedPayment.getPaymentDate());
-        existingPayment.setPaymentMethod(updatedPayment.getPaymentMethod());
-        existingPayment.setStatus(updatedPayment.getStatus());
-        existingPayment.setProposal(updatedPayment.getProposal());
+        existingPayment.setAmount(paymentDTO.getAmount());
+        existingPayment.setPaymentDate(paymentDTO.getPaymentDate());
+        existingPayment.setPaymentMethod(paymentDTO.getPaymentMethod());
+        existingPayment.setStatus(paymentDTO.getStatus());
 
-        return paymentRepository.save(existingPayment);
+        if (paymentDTO.getProposalId() != null) {
+
+            Proposal proposal = proposalRepository.findById(paymentDTO.getProposalId())
+                    .orElseThrow(() -> new RuntimeException("Proposal not found with ID: " + paymentDTO.getProposalId()));
+
+            existingPayment.setProposal(proposal);
+        }
+
+        Payment updatedPayment = paymentRepository.save(existingPayment);
+
+        return new PaymentDTO(updatedPayment);
     }
 
     @Override
     public void deletePayment(String paymentId) {
 
-        Payment existingPayment = getPaymentById(paymentId);
+        Payment existingPayment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new RuntimeException("Payment not found with ID: " + paymentId));
 
         paymentRepository.delete(existingPayment);
     }
 
     @Override
-    public Payment processPayment(String proposalId, double amount, String paymentMethod) {
+    public PaymentDTO processPayment(String proposalId, double amount, String paymentMethod) {
 
         Proposal proposal = proposalRepository.findById(proposalId)
                 .orElseThrow(() -> new RuntimeException("Proposal not found with ID: " + proposalId));
@@ -109,6 +154,6 @@ public class PaymentServiceImpl implements IPaymentService {
         System.out.println("Payment received for proposal: " + proposalId);
         System.out.println("Policy document sent to user: " + proposal.getUser().getEmail());
 
-        return savedPayment;
+        return new PaymentDTO(savedPayment);
     }
 }

@@ -2,7 +2,7 @@ package com.hexaware.ais.controller;
 
 import java.util.List;
 
-import com.hexaware.ais.entity.Claim;
+import com.hexaware.ais.dto.ClaimDTO;
 import com.hexaware.ais.service.IClaimService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,45 +28,45 @@ public class ClaimController {
 
     // Create a new claim
     @PostMapping("/create")
-    public ResponseEntity<Claim> createClaim(@RequestBody Claim claim) {
+    public ResponseEntity<ClaimDTO> createClaim(@RequestBody ClaimDTO claimDTO) {
 
-        Claim createdClaim = claimService.createClaim(claim);
+        ClaimDTO createdClaim = claimService.createClaim(claimDTO);
 
         return ResponseEntity.ok(createdClaim);
     }
 
     // Get a claim by ID
     @GetMapping("/get/{claimId}")
-    public ResponseEntity<Claim> getClaimById(@PathVariable String claimId) {
+    public ResponseEntity<ClaimDTO> getClaimById(@PathVariable String claimId) {
 
-        Claim claim = claimService.getClaimById(claimId);
+        ClaimDTO claim = claimService.getClaimById(claimId);
 
         return ResponseEntity.ok(claim);
     }
 
     // Get all claims
     @GetMapping("/getall")
-    public ResponseEntity<List<Claim>> getAllClaims() {
+    public ResponseEntity<List<ClaimDTO>> getAllClaims() {
 
-        List<Claim> claims = claimService.getAllClaims();
+        List<ClaimDTO> claims = claimService.getAllClaims();
 
         return ResponseEntity.ok(claims);
     }
 
     // Get claims by proposal ID
     @GetMapping("/get/claim-by-proposal/{proposalId}")
-    public ResponseEntity<List<Claim>> getClaimsByProposalId(@PathVariable String proposalId) {
+    public ResponseEntity<List<ClaimDTO>> getClaimsByProposalId(@PathVariable String proposalId) {
 
-        List<Claim> claims = claimService.getClaimsByProposalId(proposalId);
+        List<ClaimDTO> claims = claimService.getClaimsByProposalId(proposalId);
 
         return ResponseEntity.ok(claims);
     }
 
     // Update a claim
     @PutMapping("/update/{claimId}")
-    public ResponseEntity<Claim> updateClaim(@PathVariable String claimId, @RequestBody Claim claim) {
+    public ResponseEntity<ClaimDTO> updateClaim(@PathVariable String claimId, @RequestBody ClaimDTO claimDTO) {
 
-        Claim updatedClaim = claimService.updateClaim(claimId, claim);
+        ClaimDTO updatedClaim = claimService.updateClaim(claimId, claimDTO);
 
         return ResponseEntity.ok(updatedClaim);
     }

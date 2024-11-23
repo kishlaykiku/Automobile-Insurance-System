@@ -3,6 +3,7 @@ package com.hexaware.ais.controller;
 import java.util.List;
 
 import com.hexaware.ais.entity.Proposal;
+import com.hexaware.ais.dto.ProposalDTO;
 import com.hexaware.ais.service.IProposalService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,54 +29,54 @@ public class ProposalController {
 
     // Create a new proposal
     @PostMapping("/create")
-    public ResponseEntity<Proposal> createProposal(@RequestBody Proposal proposal) {
+    public ResponseEntity<ProposalDTO> createProposal(@RequestBody Proposal proposal) {
 
-        Proposal createdProposal = proposalService.createProposal(proposal);
+        ProposalDTO createdProposal = proposalService.createProposal(proposal);
 
         return ResponseEntity.ok(createdProposal);
     }
 
     // Submit a new proposal
     @PostMapping("/submit-proposal")
-    public ResponseEntity<Proposal> submitProposal(@RequestBody Proposal proposal) {
+    public ResponseEntity<ProposalDTO> submitProposal(@RequestBody Proposal proposal) {
 
-        Proposal submittedProposal = proposalService.submitProposal(proposal);
+        ProposalDTO submittedProposal = proposalService.submitProposal(proposal);
 
         return ResponseEntity.ok(submittedProposal);
     }
 
     // Get a proposal by ID
     @GetMapping("/get/{proposalId}")
-    public ResponseEntity<Proposal> getProposalById(@PathVariable String proposalId) {
+    public ResponseEntity<ProposalDTO> getProposalById(@PathVariable String proposalId) {
 
-        Proposal proposal = proposalService.getProposalById(proposalId);
+        ProposalDTO proposal = proposalService.getProposalById(proposalId);
 
         return ResponseEntity.ok(proposal);
     }
 
     // Get all proposals
     @GetMapping("/getall")
-    public ResponseEntity<List<Proposal>> getAllProposals() {
+    public ResponseEntity<List<ProposalDTO>> getAllProposals() {
 
-        List<Proposal> proposals = proposalService.getAllProposals();
+        List<ProposalDTO> proposals = proposalService.getAllProposals();
 
         return ResponseEntity.ok(proposals);
     }
 
     // Get proposals by user ID
     @GetMapping("/get/proposal-by-user/{userId}")
-    public ResponseEntity<List<Proposal>> getProposalsByUserId(@PathVariable String userId) {
+    public ResponseEntity<List<ProposalDTO>> getProposalsByUserId(@PathVariable String userId) {
 
-        List<Proposal> proposals = proposalService.getProposalsByUserId(userId);
+        List<ProposalDTO> proposals = proposalService.getProposalsByUserId(userId);
 
         return ResponseEntity.ok(proposals);
     }
 
     // Update a proposal
     @PutMapping("/update/{proposalId}")
-    public ResponseEntity<Proposal> updateProposal(@PathVariable String proposalId, @RequestBody Proposal proposal) {
+    public ResponseEntity<ProposalDTO> updateProposal(@PathVariable String proposalId, @RequestBody Proposal proposal) {
 
-        Proposal updatedProposal = proposalService.updateProposal(proposalId, proposal);
+        ProposalDTO updatedProposal = proposalService.updateProposal(proposalId, proposal);
 
         return ResponseEntity.ok(updatedProposal);
     }
@@ -91,36 +92,36 @@ public class ProposalController {
 
     // Approve a proposal
     @PutMapping("/approve/{proposalId}")
-    public ResponseEntity<Proposal> approveProposal(@PathVariable String proposalId, @RequestParam String remarks) {
+    public ResponseEntity<ProposalDTO> approveProposal(@PathVariable String proposalId, @RequestParam String remarks) {
 
-        Proposal updatedProposal = proposalService.approveProposal(proposalId, remarks);
+        ProposalDTO updatedProposal = proposalService.approveProposal(proposalId, remarks);
 
         return ResponseEntity.ok(updatedProposal);
     }
 
     // Reject a proposal
     @PutMapping("/reject/{proposalId}")
-    public ResponseEntity<Proposal> rejectProposal(@PathVariable String proposalId, @RequestParam String remarks) {
+    public ResponseEntity<ProposalDTO> rejectProposal(@PathVariable String proposalId, @RequestParam String remarks) {
 
-        Proposal updatedProposal = proposalService.rejectProposal(proposalId, remarks);
+        ProposalDTO updatedProposal = proposalService.rejectProposal(proposalId, remarks);
 
         return ResponseEntity.ok(updatedProposal);
     }
 
     // Request additional details
     @PutMapping("/request-details/{proposalId}")
-    public ResponseEntity<Proposal> requestAdditionalDetails(@PathVariable String proposalId, @RequestParam String remarks) {
+    public ResponseEntity<ProposalDTO> requestAdditionalDetails(@PathVariable String proposalId, @RequestParam String remarks) {
 
-        Proposal updatedProposal = proposalService.requestAdditionalDetails(proposalId, remarks);
+        ProposalDTO updatedProposal = proposalService.requestAdditionalDetails(proposalId, remarks);
 
         return ResponseEntity.ok(updatedProposal);
     }
 
     // Send a quote for the proposal
     @PutMapping("/send-quote/{proposalId}")
-    public ResponseEntity<Proposal> sendQuote(@PathVariable String proposalId) {
+    public ResponseEntity<ProposalDTO> sendQuote(@PathVariable String proposalId) {
 
-        Proposal updatedProposal = proposalService.sendQuote(proposalId);
+        ProposalDTO updatedProposal = proposalService.sendQuote(proposalId);
 
         return ResponseEntity.ok(updatedProposal);
     }

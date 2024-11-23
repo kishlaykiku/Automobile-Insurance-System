@@ -2,7 +2,7 @@ package com.hexaware.ais.service;
 
 import java.util.List;
 
-import com.hexaware.ais.entity.User;
+import com.hexaware.ais.dto.UserDTO;
 
 
 /*
@@ -15,20 +15,20 @@ public interface IUserService {
     /******************************************* Method Signatures *******************************************/
 
     // Create a new user
-    User createUser(User user);
+    UserDTO createUser(UserDTO userDTO);
 
     // Get a user by ID
-    User getUserById(String userId);
+    UserDTO getUserById(String userId);
 
     // Get all users
-    List<User> getAllUsers();
+    List<UserDTO> getAllUsers();
 
     // Update a user
-    User updateUser(String userId, User user);
+    UserDTO updateUser(String userId, UserDTO userDTO);
 
     // Delete a user
     void deleteUser(String userId);
 
     // Find a user by email
-    User findByEmail(String email);
+    UserDTO findByEmail(String email);
 }

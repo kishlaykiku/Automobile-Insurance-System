@@ -2,7 +2,7 @@ package com.hexaware.ais.controller;
 
 import java.util.List;
 
-import com.hexaware.ais.entity.User;
+import com.hexaware.ais.dto.UserDTO;
 import com.hexaware.ais.service.IUserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,36 +28,36 @@ public class UserController {
 
     // Create a new user
     @PostMapping("/create")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
 
-        User createdUser = userService.createUser(user);
+        UserDTO createdUser = userService.createUser(userDTO);
 
         return ResponseEntity.ok(createdUser);
     }
 
     // Get a user by ID
     @GetMapping("/get/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable String userId) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable String userId) {
 
-        User user = userService.getUserById(userId);
+        UserDTO user = userService.getUserById(userId);
 
         return ResponseEntity.ok(user);
     }
 
     // Get all users
     @GetMapping("/getall")
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
 
-        List<User> users = userService.getAllUsers();
+        List<UserDTO> users = userService.getAllUsers();
 
         return ResponseEntity.ok(users);
     }
 
     // Update a user
     @PutMapping("/update/{userId}")
-    public ResponseEntity<User> updateUser(@PathVariable String userId, @RequestBody User user) {
+    public ResponseEntity<UserDTO> updateUser(@PathVariable String userId, @RequestBody UserDTO userDTO) {
 
-        User updatedUser = userService.updateUser(userId, user);
+        UserDTO updatedUser = userService.updateUser(userId, userDTO);
 
         return ResponseEntity.ok(updatedUser);
     }
@@ -73,9 +73,9 @@ public class UserController {
 
     // Find a user by email
     @GetMapping("/get/user-by-email/{email}")
-    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
+    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
 
-        User user = userService.findByEmail(email);
+        UserDTO user = userService.findByEmail(email);
 
         return ResponseEntity.ok(user);
     }

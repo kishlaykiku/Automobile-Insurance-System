@@ -20,6 +20,7 @@ public class VehicleDTO {
 
     // Default constructor
     public VehicleDTO() {
+
         super();
     }
 

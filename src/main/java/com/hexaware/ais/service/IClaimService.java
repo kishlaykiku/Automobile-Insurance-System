@@ -2,7 +2,7 @@ package com.hexaware.ais.service;
 
 import java.util.List;
 
-import com.hexaware.ais.entity.Claim;
+import com.hexaware.ais.dto.ClaimDTO;
 
 /*
  * @Author: Kishlay Kumar
@@ -14,19 +14,19 @@ public interface IClaimService {
     /******************************************* Method Signatures *******************************************/
 
     // Create a new claim
-    Claim createClaim(Claim claim);
+    ClaimDTO createClaim(ClaimDTO claimDto);
 
     // Get a claim by ID
-    Claim getClaimById(String claimId);
+    ClaimDTO getClaimById(String claimId);
 
     // Get all claims
-    List<Claim> getAllClaims();
+    List<ClaimDTO> getAllClaims();
 
     // Get claims by proposal ID
-    List<Claim> getClaimsByProposalId(String proposalId);
+    List<ClaimDTO> getClaimsByProposalId(String proposalId);
 
     // Update a claim
-    Claim updateClaim(String claimId, Claim claim);
+    ClaimDTO updateClaim(String claimId, ClaimDTO claim);
 
     // Delete a claim
     void deleteClaim(String claimId);

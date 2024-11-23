@@ -1,9 +1,10 @@
 package com.hexaware.ais.service.impl;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.ArrayList;
 
 import com.hexaware.ais.entity.User;
+import com.hexaware.ais.dto.UserDTO;
 import com.hexaware.ais.repository.UserRepository;
 import com.hexaware.ais.service.IUserService;
 
@@ -31,50 +32,67 @@ public class UserServiceImpl implements IUserService {
     /******************************************* Methods *******************************************/
 
     @Override
-    public User createUser(User user) {
+    public UserDTO createUser(UserDTO userDTO) {
 
-        logger.info("Creating user with email: {}", user.getEmail());
+        logger.info("Creating user with email: {}", userDTO.getEmail());
 
-        return userRepository.save(user);
+        User user = userDTO.toEntity();
+        User savedUser = userRepository.save(user);
+
+        return new UserDTO(savedUser);
     }
 
     @Override
-    public User getUserById(String userId) {
+    public UserDTO getUserById(String userId) {
 
         logger.debug("Fetching user with ID: {}", userId);
 
-        Optional<User> user = userRepository.findById(userId);
+        User user = userRepository.findById(userId).orElse(null);
 
-        if (user.isEmpty()) {
+        if (user == null) {
+
             logger.error("User with ID {} not found", userId);
+
+            throw new RuntimeException("User not found with ID: " + userId);
         }
 
-        return user.orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+        return new UserDTO(user);
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<UserDTO> getAllUsers() {
 
         logger.info("Fetching all users");
 
-        return userRepository.findAll();
+        List<User> users = userRepository.findAll();
+        List<UserDTO> userDTOList = new ArrayList<>();
+
+        for (User user : users) {
+
+            userDTOList.add(new UserDTO(user));
+        }
+
+        return userDTOList;
     }
 
     @Override
-    public User updateUser(String userId, User updatedUser) {
+    public UserDTO updateUser(String userId, UserDTO userDTO) {
 
         logger.info("Updating user with ID: {}", userId);
 
-        User existingUser = getUserById(userId);
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
-        existingUser.setName(updatedUser.getName());
-        existingUser.setEmail(updatedUser.getEmail());
-        existingUser.setAddress(updatedUser.getAddress());
-        existingUser.setDob(updatedUser.getDob());
-        existingUser.setAadharNo(updatedUser.getAadharNo());
-        existingUser.setPanNo(updatedUser.getPanNo());
+        existingUser.setName(userDTO.getName());
+        existingUser.setEmail(userDTO.getEmail());
+        existingUser.setAddress(userDTO.getAddress());
+        existingUser.setDob(userDTO.getDob());
+        existingUser.setAadharNo(userDTO.getAadharNo());
+        existingUser.setPanNo(userDTO.getPanNo());
 
-        return userRepository.save(existingUser);
+        User updatedUser = userRepository.save(existingUser);
+
+        return new UserDTO(updatedUser);
     }
 
     @Override
@@ -82,16 +100,24 @@ public class UserServiceImpl implements IUserService {
 
         logger.info("Deleting user with ID: {}", userId);
 
-        User existingUser = getUserById(userId);
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
         userRepository.delete(existingUser);
     }
 
     @Override
-    public User findByEmail(String email) {
+    public UserDTO findByEmail(String email) {
 
         logger.debug("Fetching user with email: {}", email);
 
-        return userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email);
+
+        if (user == null) {
+
+            throw new RuntimeException("User not found with email: " + email);
+        }
+
+        return new UserDTO(user);
     }
 }

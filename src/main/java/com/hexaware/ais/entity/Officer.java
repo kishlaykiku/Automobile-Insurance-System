@@ -90,4 +90,9 @@ public class Officer {
     public void setRole(String role) {
         this.role = role;
     }
+
+    public Officer orElseThrow(Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
+    }
 }

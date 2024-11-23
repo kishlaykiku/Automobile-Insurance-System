@@ -52,8 +52,14 @@ public class Payment {
 
             this.paymentId = UUID.randomUUID().toString();
         }
+
+        if(this.status == null) {
+
+            this.status = "Pending";
+        }
+
         this.paymentDate = LocalDate.now();
-        this.status = "Pending";
+        
     }
 
     /******************************************* Getters and Setters *******************************************/

@@ -2,7 +2,7 @@ package com.hexaware.ais.controller;
 
 import java.util.List;
 
-import com.hexaware.ais.entity.Policy;
+import com.hexaware.ais.dto.PolicyDTO;
 import com.hexaware.ais.service.IPolicyService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,27 +28,27 @@ public class PolicyController {
 
     // Create a new policy
     @PostMapping("/create")
-    public ResponseEntity<Policy> createPolicy(@RequestBody Policy policy) {
+    public ResponseEntity<PolicyDTO> createPolicy(@RequestBody PolicyDTO policyDTO) {
 
-        Policy createdPolicy = policyService.createPolicy(policy);
+        PolicyDTO createdPolicy = policyService.createPolicy(policyDTO);
 
         return ResponseEntity.ok(createdPolicy);
     }
 
     // Get a policy by ID
     @GetMapping("/get/{policyId}")
-    public ResponseEntity<Policy> getPolicyById(@PathVariable String policyId) {
+    public ResponseEntity<PolicyDTO> getPolicyById(@PathVariable String policyId) {
 
-        Policy policy = policyService.getPolicyById(policyId);
+        PolicyDTO policy = policyService.getPolicyById(policyId);
 
         return ResponseEntity.ok(policy);
     }
 
     // Get all policies
     @GetMapping("/getall")
-    public ResponseEntity<List<Policy>> getAllPolicies() {
+    public ResponseEntity<List<PolicyDTO>> getAllPolicies() {
 
-        List<Policy> policies = policyService.getAllPolicies();
+        List<PolicyDTO> policies = policyService.getAllPolicies();
 
         return ResponseEntity.ok(policies);
     }
@@ -64,9 +64,9 @@ public class PolicyController {
 
     // Update a policy
     @PutMapping("/update/{policyId}")
-    public ResponseEntity<Policy> updatePolicy(@PathVariable String policyId, @RequestBody Policy policy) {
+    public ResponseEntity<PolicyDTO> updatePolicy(@PathVariable String policyId, @RequestBody PolicyDTO policyDTO) {
 
-        Policy updatedPolicy = policyService.updatePolicy(policyId, policy);
+        PolicyDTO updatedPolicy = policyService.updatePolicy(policyId, policyDTO);
 
         return ResponseEntity.ok(updatedPolicy);
     }
@@ -82,18 +82,18 @@ public class PolicyController {
 
     // Get all policies for a user
     @GetMapping("/get/policy-by-user/{userId}")
-    public ResponseEntity<List<Policy>> getPoliciesByUserId(@PathVariable String userId) {
+    public ResponseEntity<List<PolicyDTO>> getPoliciesByUserId(@PathVariable String userId) {
 
-        List<Policy> policies = policyService.getPoliciesByUserId(userId);
+        List<PolicyDTO> policies = policyService.getPoliciesByUserId(userId);
 
         return ResponseEntity.ok(policies);
     }
 
     // Send premium reminders
     @PutMapping("/send-premium-reminders")
-    public ResponseEntity<List<Policy>> sendPremiumReminders() {
+    public ResponseEntity<List<PolicyDTO>> sendPremiumReminders() {
 
-        List<Policy> policies = policyService.sendPremiumReminders();
+        List<PolicyDTO> policies = policyService.sendPremiumReminders();
 
         return ResponseEntity.ok(policies);
     }

@@ -1,10 +1,13 @@
 package com.hexaware.ais.service.impl;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.ArrayList;
 
+import com.hexaware.ais.dto.ClaimDTO;
 import com.hexaware.ais.entity.Claim;
+import com.hexaware.ais.entity.Proposal;
 import com.hexaware.ais.repository.ClaimRepository;
+import com.hexaware.ais.repository.ProposalRepository;
 import com.hexaware.ais.service.IClaimService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,52 +27,82 @@ public class ClaimServiceImpl implements IClaimService {
     @Autowired
     private ClaimRepository claimRepository;
 
+    @Autowired
+    private ProposalRepository proposalRepository;
+
     /******************************************* Methods *******************************************/
 
     @Override
-    public Claim createClaim(Claim claim) {
+    public ClaimDTO createClaim(ClaimDTO claimDTO) {
 
-        return claimRepository.save(claim);
+        Proposal proposal = proposalRepository.findById(claimDTO.getProposalId())
+                .orElseThrow(() -> new RuntimeException("Proposal not found with ID: " + claimDTO.getProposalId()));
+
+        Claim claim = claimDTO.toEntity(proposal);
+
+        return new ClaimDTO(claimRepository.save(claim));
     }
 
     @Override
-    public Claim getClaimById(String claimId) {
+    public ClaimDTO getClaimById(String claimId) {
 
-        Optional<Claim> claim = claimRepository.findById(claimId);
+        Claim claim = claimRepository.findById(claimId)
+                .orElseThrow(() -> new RuntimeException("Claim not found with ID: " + claimId));
 
-        return claim.orElseThrow(() -> new RuntimeException("Claim not found with ID: " + claimId));
+        return new ClaimDTO(claim);
     }
 
     @Override
-    public List<Claim> getAllClaims() {
+    public List<ClaimDTO> getAllClaims() {
 
-        return claimRepository.findAll();
+        List<Claim> claims = claimRepository.findAll();
+        List<ClaimDTO> claimDTOs = new ArrayList<>();
+
+        for (Claim claim : claims) {
+
+            claimDTOs.add(new ClaimDTO(claim));
+        }
+
+        return claimDTOs;
     }
 
     @Override
-    public List<Claim> getClaimsByProposalId(String proposalId) {
+    public List<ClaimDTO> getClaimsByProposalId(String proposalId) {
 
-        return claimRepository.findByProposalProposalId(proposalId);
+        List<Claim> claims = claimRepository.findByProposalProposalId(proposalId);
+        List<ClaimDTO> claimDTOs = new ArrayList<>();
+
+        for (Claim claim : claims) {
+
+            claimDTOs.add(new ClaimDTO(claim));
+        }
+
+        return claimDTOs;
     }
 
     @Override
-    public Claim updateClaim(String claimId, Claim updatedClaim) {
+    public ClaimDTO updateClaim(String claimId, ClaimDTO claimDTO) {
 
-        Claim existingClaim = getClaimById(claimId);
+        Claim existingClaim = claimRepository.findById(claimId)
+                .orElseThrow(() -> new RuntimeException("Claim not found with ID: " + claimId));
 
-        existingClaim.setClaimDate(updatedClaim.getClaimDate());
-        existingClaim.setStatus(updatedClaim.getStatus());
-        existingClaim.setAmount(updatedClaim.getAmount());
-        existingClaim.setRemarks(updatedClaim.getRemarks());
-        existingClaim.setProposal(updatedClaim.getProposal());
+        Proposal proposal = proposalRepository.findById(claimDTO.getProposalId())
+                .orElseThrow(() -> new RuntimeException("Proposal not found with ID: " + claimDTO.getProposalId()));
 
-        return claimRepository.save(existingClaim);
+        existingClaim.setClaimDate(claimDTO.getClaimDate());
+        existingClaim.setStatus(claimDTO.getStatus());
+        existingClaim.setAmount(claimDTO.getAmount());
+        existingClaim.setRemarks(claimDTO.getRemarks());
+        existingClaim.setProposal(proposal);
+
+        return new ClaimDTO(claimRepository.save(existingClaim));
     }
 
     @Override
     public void deleteClaim(String claimId) {
 
-        Claim existingClaim = getClaimById(claimId);
+        Claim existingClaim = claimRepository.findById(claimId)
+                .orElseThrow(() -> new RuntimeException("Claim not found with ID: " + claimId));
 
         claimRepository.delete(existingClaim);
     }

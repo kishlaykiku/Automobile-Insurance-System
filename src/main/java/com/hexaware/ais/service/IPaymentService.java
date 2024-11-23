@@ -2,7 +2,7 @@ package com.hexaware.ais.service;
 
 import java.util.List;
 
-import com.hexaware.ais.entity.Payment;
+import com.hexaware.ais.dto.PaymentDTO;
 
 
 /*
@@ -15,23 +15,23 @@ public interface IPaymentService {
     /******************************************* Method Signatures *******************************************/
 
     // Create a new payment
-    Payment createPayment(Payment payment);
+    PaymentDTO createPayment(PaymentDTO paymentDTO);
 
     // Get a payment by ID
-    Payment getPaymentById(String paymentId);
+    PaymentDTO getPaymentById(String paymentId);
 
     // Get all payments
-    List<Payment> getAllPayments();
+    List<PaymentDTO> getAllPayments();
 
     // Get payments by proposal ID
-    List<Payment> getPaymentsByProposalId(String proposalId);
+    List<PaymentDTO> getPaymentsByProposalId(String proposalId);
 
     // Update a payment
-    Payment updatePayment(String paymentId, Payment payment);
+    PaymentDTO updatePayment(String paymentId, PaymentDTO payment);
 
     // Delete a payment
     void deletePayment(String paymentId);
 
     // Process a payment
-    Payment processPayment(String proposalId, double amount, String paymentMethod);
+    PaymentDTO processPayment(String proposalId, double amount, String paymentMethod);
 }
