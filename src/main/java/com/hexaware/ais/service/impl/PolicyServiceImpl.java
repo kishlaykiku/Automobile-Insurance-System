@@ -9,6 +9,8 @@ import com.hexaware.ais.dto.PolicyDTO;
 import com.hexaware.ais.repository.PolicyRepository;
 import com.hexaware.ais.service.IPolicyService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,8 @@ public class PolicyServiceImpl implements IPolicyService {
 
     /******************************************* Dependencies *******************************************/
 
+    private static final Logger logger = LoggerFactory.getLogger(PolicyServiceImpl.class);
+
     @Autowired
     private PolicyRepository policyRepository;
 
@@ -30,6 +34,8 @@ public class PolicyServiceImpl implements IPolicyService {
 
     @Override
     public PolicyDTO createPolicy(PolicyDTO policyDTO) {
+
+        logger.debug("[START] Creating policy with policy number: {}", policyDTO.getPolicyNo());
 
         Policy policy = new Policy();
 
@@ -46,14 +52,25 @@ public class PolicyServiceImpl implements IPolicyService {
 
         Policy savedPolicy = policyRepository.save(policy);
 
+        logger.debug("[END] Policy created successfully with ID: {}", savedPolicy.getPolicyId());
+
         return new PolicyDTO(savedPolicy);
     }
 
     @Override
     public PolicyDTO getPolicyById(String policyId) {
 
+        logger.debug("[START] Fetching policy with ID: {}", policyId);
+
         Policy policy = policyRepository.findById(policyId)
-                .orElseThrow(() -> new RuntimeException("Policy not found with ID: " + policyId));
+                .orElseThrow(() -> {
+
+                    logger.error("[END] Policy with ID ({}) not found", policyId);
+                    return new RuntimeException("Policy not found with ID: " + policyId);
+                }
+            );
+
+        logger.debug("[END] Policy with ID ({}) fetched successfully", policyId);
 
         return new PolicyDTO(policy);
     }
@@ -61,12 +78,23 @@ public class PolicyServiceImpl implements IPolicyService {
     @Override
     public List<PolicyDTO> getAllPolicies() {
 
+        logger.debug("[START] Fetching all policies");
+
         List<Policy> policies = policyRepository.findAll();
         List<PolicyDTO> policyDTOs = new ArrayList<>();
 
-        for (Policy policy : policies) {
+        if(policies.isEmpty()) {
 
-            policyDTOs.add(new PolicyDTO(policy));
+            logger.warn("[END] No policies found in the system");
+        }
+        else {
+
+            for (Policy policy : policies) {
+
+                policyDTOs.add(new PolicyDTO(policy));
+            }
+
+            logger.debug("[END] Fetched all policies successfully");
         }
 
         return policyDTOs;
@@ -75,14 +103,27 @@ public class PolicyServiceImpl implements IPolicyService {
     @Override
     public long getActivePolicyCount() {
 
-        return policyRepository.countByStatus("Active");
+        logger.debug("[START] Fetching active policy count");
+
+        long count = policyRepository.countByStatus("Active");
+
+        logger.debug("[END] Active policy count: {}", count);
+
+        return count;
     }
 
     @Override
     public PolicyDTO updatePolicy(String policyId, PolicyDTO policyDTO) {
 
+        logger.debug("[START] Updating policy with ID: {}", policyId);
+
         Policy existingPolicy = policyRepository.findById(policyId)
-                .orElseThrow(() -> new RuntimeException("Policy not found with ID: " + policyId));
+                .orElseThrow(() -> {
+
+                    logger.error("[END] Policy with ID ({}) not found", policyId);
+                    return new RuntimeException("Policy not found with ID: " + policyId);
+                }
+            );
 
         existingPolicy.setPolicyNo(policyDTO.getPolicyNo());
         existingPolicy.setType(policyDTO.getType());
@@ -97,27 +138,49 @@ public class PolicyServiceImpl implements IPolicyService {
 
         Policy updatedPolicy = policyRepository.save(existingPolicy);
 
+        logger.debug("[END] Policy with ID ({}) updated successfully", policyId);
+
         return new PolicyDTO(updatedPolicy);
     }
 
     @Override
     public void deletePolicy(String policyId) {
 
+        logger.debug("[START] Deleting policy with ID: {}", policyId);
+
         Policy existingPolicy = policyRepository.findById(policyId)
-                .orElseThrow(() -> new RuntimeException("Policy not found with ID: " + policyId));
+                .orElseThrow(() -> {
+
+                    logger.error("[END] Policy with ID ({}) not found", policyId);
+                    return new RuntimeException("Policy not found with ID: " + policyId);
+                }
+            );
 
         policyRepository.delete(existingPolicy);
+
+        logger.debug("[END] Policy with ID ({}) deleted successfully", policyId);
     }
 
     @Override
     public List<PolicyDTO> getPoliciesByUserId(String userId) {
 
+        logger.debug("[START] Fetching policies for user with ID: {}", userId);
+
         List<Policy> policies = policyRepository.findPoliciesByUserId(userId);
         List<PolicyDTO> policyDTOs = new ArrayList<>();
 
-        for (Policy policy : policies) {
+        if(policies.isEmpty()) {
 
-            policyDTOs.add(new PolicyDTO(policy));
+            logger.warn("[END] No policies found for user with ID: {}", userId);
+        }
+        else {
+
+            for (Policy policy : policies) {
+
+                policyDTOs.add(new PolicyDTO(policy));
+            }
+
+            logger.debug("[END] Fetched policies for user with ID ({}) successfully", userId);
         }
 
         return policyDTOs;
@@ -126,22 +189,33 @@ public class PolicyServiceImpl implements IPolicyService {
     @Override
     public List<PolicyDTO> sendPremiumReminders() {
 
+        logger.debug("[START] Sending premium reminders");
+
         LocalDate today = LocalDate.now();
         LocalDate oneWeekLater = today.plusWeeks(1);
 
         List<Policy> expiringPolicies = policyRepository.findByEndDateBetweenAndReminderSentFalse(today, oneWeekLater);
         List<PolicyDTO> policyDTOs = new ArrayList<>();
 
-        for (Policy policy : expiringPolicies) {
+        if(expiringPolicies.isEmpty()) {
 
-            policy.setReminderSent(true);
-            policy.setStatus("Reminder Sent");
+            logger.warn("[END] No expiring policies found");
+        }
+        else {
 
-            policyRepository.save(policy);
+            for (Policy policy : expiringPolicies) {
 
-            System.out.println("Reminder sent for policy: " + policy.getPolicyNo() + ", Expiry Date: " + policy.getEndDate());
+                policy.setReminderSent(true);
+                policy.setStatus("Reminder Sent");
+    
+                policyRepository.save(policy);
+    
+                logger.info("Reminder sent for policy ({}) with expiry date ({})", policy.getPolicyNo(), policy.getEndDate());
+    
+                policyDTOs.add(new PolicyDTO(policy));
+            }
 
-            policyDTOs.add(new PolicyDTO(policy));
+            logger.debug("[END] Premium reminders sent successfully");
         }
 
         return policyDTOs;

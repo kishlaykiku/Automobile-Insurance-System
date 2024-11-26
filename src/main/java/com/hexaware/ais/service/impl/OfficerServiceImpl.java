@@ -7,6 +7,8 @@ import com.hexaware.ais.dto.OfficerDTO;
 import com.hexaware.ais.repository.OfficerRepository;
 import com.hexaware.ais.service.IOfficerService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,8 @@ public class OfficerServiceImpl implements IOfficerService {
 
     /******************************************* Dependencies *******************************************/
 
+    private static final Logger logger = LoggerFactory.getLogger(OfficerServiceImpl.class);
+
     @Autowired
     private OfficerRepository officerRepository;
 
@@ -28,8 +32,17 @@ public class OfficerServiceImpl implements IOfficerService {
     @Override
     public OfficerDTO getAdminDetails() {
 
+        logger.debug("[START] Fetching admin details");
+
         Officer officer = officerRepository.findByRole("Admin")
-                .orElseThrow(() -> new RuntimeException("Admin not found."));
+                .orElseThrow(() -> {
+
+                    logger.error("[END] Admin not found");
+                    return new RuntimeException("Admin not found.");
+                }
+            );
+
+        logger.debug("[END] Admin details fetched successfully");
 
         return new OfficerDTO(officer);
     }
@@ -37,13 +50,22 @@ public class OfficerServiceImpl implements IOfficerService {
     @Override
     public OfficerDTO updateAdminDetails(OfficerDTO officerDTO) {
 
+        logger.debug("[START] Updating admin details");
+
         Officer existingAdmin = officerRepository.findByRole("Admin")
-                .orElseThrow(() -> new RuntimeException("Admin not found."));
+                .orElseThrow(() -> {
+
+                    logger.error("[END] Admin not found");
+                    return new RuntimeException("Admin not found.");
+                }
+            );
 
         existingAdmin.setName(officerDTO.getName());
         existingAdmin.setEmail(officerDTO.getEmail());
 
         officerRepository.save(existingAdmin);
+
+        logger.debug("[END] Admin details updated successfully");
 
         return new OfficerDTO(existingAdmin);
     }
@@ -51,14 +73,29 @@ public class OfficerServiceImpl implements IOfficerService {
     @Override
     public boolean authenticateAdmin(String email, String password) {
 
+        logger.debug("[START] Authenticating admin with email: {}", email);
+
         Optional<Officer> adminOptional = officerRepository.findByEmail(email);
 
         if (adminOptional.isPresent()) {
 
             Officer admin = adminOptional.get();
 
-            return admin.getPassword().equals(password);
+            if (admin.getPassword().equals(password)) {
+
+                logger.debug("[END] Admin authentication successful for email: {}", email);
+
+                return true;
+            }
+            else {
+
+                logger.warn("[END] Invalid password for email: {}", email);
+
+                return false;
+            }
         }
+
+        logger.warn("[END] Admin with email ({}) not found", email);
 
         return false;
     }

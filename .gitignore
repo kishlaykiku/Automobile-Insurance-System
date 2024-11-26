@@ -1,4 +1,4 @@
-ais_log_file.log
+ais_application.log
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar

@@ -11,6 +11,8 @@ import com.hexaware.ais.repository.PaymentRepository;
 import com.hexaware.ais.repository.ProposalRepository;
 import com.hexaware.ais.service.IPaymentService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,8 @@ public class PaymentServiceImpl implements IPaymentService {
 
     /******************************************* Dependencies *******************************************/
 
+    private static final Logger logger = LoggerFactory.getLogger(PaymentServiceImpl.class);
+
     @Autowired
     private PaymentRepository paymentRepository;
 
@@ -36,6 +40,8 @@ public class PaymentServiceImpl implements IPaymentService {
     @Override
     public PaymentDTO createPayment(PaymentDTO paymentDTO) {
 
+        logger.debug("[START] Creating payment with amount {} for proposal ID {}", paymentDTO.getAmount(), paymentDTO.getProposalId());
+
         Payment payment = new Payment();
 
         payment.setAmount(paymentDTO.getAmount());
@@ -45,12 +51,19 @@ public class PaymentServiceImpl implements IPaymentService {
         if (paymentDTO.getProposalId() != null) {
 
             Proposal proposal = proposalRepository.findById(paymentDTO.getProposalId())
-                    .orElseThrow(() -> new RuntimeException("Proposal not found with ID: " + paymentDTO.getProposalId()));
+                    .orElseThrow(() -> {
+
+                        logger.error("[END] Proposal with ID ({}) not found", paymentDTO.getProposalId());
+                        return new RuntimeException("Proposal not found with ID: " + paymentDTO.getProposalId());
+                    }
+                );
 
             payment.setProposal(proposal);
         }
 
         Payment savedPayment = paymentRepository.save(payment);
+
+        logger.debug("[END] Payment created successfully with ID: {}", savedPayment.getPaymentId());
 
         return new PaymentDTO(savedPayment);
     }
@@ -58,8 +71,17 @@ public class PaymentServiceImpl implements IPaymentService {
     @Override
     public PaymentDTO getPaymentById(String paymentId) {
 
+        logger.debug("[START] Fetching payment with ID: {}", paymentId);
+
         Payment payment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new RuntimeException("Payment not found with ID: " + paymentId));
+                .orElseThrow(() -> {
+
+                    logger.error("[END] Payment with ID ({}) not found", paymentId);
+                    return new RuntimeException("Payment not found with ID: " + paymentId);
+                }
+            );
+
+        logger.debug("[END] Payment with ID ({}) fetched successfully", paymentId);
 
         return new PaymentDTO(payment);
     }
@@ -67,12 +89,23 @@ public class PaymentServiceImpl implements IPaymentService {
     @Override
     public List<PaymentDTO> getAllPayments() {
 
+        logger.debug("[START] Fetching all payments");
+
         List<Payment> payments = paymentRepository.findAll();
         List<PaymentDTO> paymentDTOs = new ArrayList<>();
 
-        for (Payment payment : payments) {
+        if(payments.isEmpty()) {
 
-            paymentDTOs.add(new PaymentDTO(payment));
+            logger.warn("[END] No payments found in the system");
+        }
+        else {
+
+            for (Payment payment : payments) {
+
+                paymentDTOs.add(new PaymentDTO(payment));
+            }
+
+            logger.debug("[END] Fetched all payments successfully");
         }
 
         return paymentDTOs;
@@ -81,12 +114,23 @@ public class PaymentServiceImpl implements IPaymentService {
     @Override
     public List<PaymentDTO> getPaymentsByProposalId(String proposalId) {
 
+        logger.debug("[START] Fetching payments for proposal ID: {}", proposalId);
+
         List<Payment> payments = paymentRepository.findByProposalProposalId(proposalId);
         List<PaymentDTO> paymentDTOs = new ArrayList<>();
 
-        for (Payment payment : payments) {
+        if (payments.isEmpty()) {
 
-            paymentDTOs.add(new PaymentDTO(payment));
+            logger.warn("[END] No payments found for proposal ID: {}", proposalId);
+        }
+        else {
+
+            for (Payment payment : payments) {
+
+                paymentDTOs.add(new PaymentDTO(payment));
+            }
+
+            logger.debug("[END] Payments for proposal ID ({}) fetched successfully", proposalId);
         }
 
         return paymentDTOs;
@@ -95,8 +139,15 @@ public class PaymentServiceImpl implements IPaymentService {
     @Override
     public PaymentDTO updatePayment(String paymentId, PaymentDTO paymentDTO) {
 
+        logger.debug("[START] Updating payment with ID: {}", paymentId);
+
         Payment existingPayment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new RuntimeException("Payment not found with ID: " + paymentId));
+                .orElseThrow(() -> {
+
+                    logger.error("[END] Payment with ID ({}) not found", paymentId);
+                    return new RuntimeException("Payment not found with ID: " + paymentId);
+                }
+            );
 
         existingPayment.setAmount(paymentDTO.getAmount());
         existingPayment.setPaymentDate(paymentDTO.getPaymentDate());
@@ -106,12 +157,19 @@ public class PaymentServiceImpl implements IPaymentService {
         if (paymentDTO.getProposalId() != null) {
 
             Proposal proposal = proposalRepository.findById(paymentDTO.getProposalId())
-                    .orElseThrow(() -> new RuntimeException("Proposal not found with ID: " + paymentDTO.getProposalId()));
+                    .orElseThrow(() -> {
+
+                        logger.error("[END] Proposal with ID ({}) not found", paymentDTO.getProposalId());
+                        return new RuntimeException("Proposal not found with ID: " + paymentDTO.getProposalId());
+                    }
+                );
 
             existingPayment.setProposal(proposal);
         }
 
         Payment updatedPayment = paymentRepository.save(existingPayment);
+
+        logger.debug("[END] Payment with ID ({}) updated successfully", paymentId);
 
         return new PaymentDTO(updatedPayment);
     }
@@ -119,20 +177,37 @@ public class PaymentServiceImpl implements IPaymentService {
     @Override
     public void deletePayment(String paymentId) {
 
+        logger.debug("[START] Deleting payment with ID: {}", paymentId);
+
         Payment existingPayment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new RuntimeException("Payment not found with ID: " + paymentId));
+                .orElseThrow(() -> {
+
+                    logger.error("[END] Payment with ID ({}) not found", paymentId);
+                    return new RuntimeException("Payment not found with ID: " + paymentId);
+                }
+            );
 
         paymentRepository.delete(existingPayment);
+
+        logger.debug("[END] Payment with ID ({}) deleted successfully", paymentId);
     }
 
     @Override
     public PaymentDTO processPayment(String proposalId, double amount, String paymentMethod) {
 
+        logger.debug("[START] Processing payment for proposal ID: {}", proposalId);
+
         Proposal proposal = proposalRepository.findById(proposalId)
-                .orElseThrow(() -> new RuntimeException("Proposal not found with ID: " + proposalId));
+                .orElseThrow(() -> {
+
+                    logger.error("[END] Proposal with ID ({}) not found", proposalId);
+                    return new RuntimeException("Proposal not found with ID: " + proposalId);
+                }
+            );
 
         if (!"Quote Generated".equals(proposal.getStatus())) {
 
+            logger.error("[END] Payment cannot be processed for proposal ID ({}) as status is not 'Quote Generated'", proposalId);
             throw new IllegalStateException("Payment can only be made for proposals with status 'Quote Generated'.");
         }
 
@@ -151,8 +226,10 @@ public class PaymentServiceImpl implements IPaymentService {
 
         proposalRepository.save(proposal);
 
-        System.out.println("Payment received for proposal: " + proposalId);
-        System.out.println("Policy document sent to user: " + proposal.getUser().getEmail());
+        logger.info("Payment received for proposal: " + proposalId);
+        logger.info("Policy document sent to user: " + proposal.getUser().getEmail());
+
+        logger.debug("[END] Payment for proposal ID ({}) processed successfully", proposalId);
 
         return new PaymentDTO(savedPayment);
     }

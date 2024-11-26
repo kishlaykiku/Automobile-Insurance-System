@@ -34,10 +34,12 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserDTO createUser(UserDTO userDTO) {
 
-        logger.info("Creating user with email: {}", userDTO.getEmail());
+        logger.debug("[START] Creating user with email: {}", userDTO.getEmail());
 
         User user = userDTO.toEntity();
         User savedUser = userRepository.save(user);
+
+        logger.debug("[END] User created successfully with ID: {}", savedUser.getUserId());
 
         return new UserDTO(savedUser);
     }
@@ -45,16 +47,18 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserDTO getUserById(String userId) {
 
-        logger.debug("Fetching user with ID: {}", userId);
+        logger.debug("[START] Fetching user with ID: {}", userId);
 
         User user = userRepository.findById(userId).orElse(null);
 
         if (user == null) {
 
-            logger.error("User with ID {} not found", userId);
+            logger.error("[END] User with ID ({}) not found", userId);
 
             throw new RuntimeException("User not found with ID: " + userId);
         }
+
+        logger.debug("[END] User with ID ({}) fetched successfully", userId);
 
         return new UserDTO(user);
     }
@@ -62,14 +66,23 @@ public class UserServiceImpl implements IUserService {
     @Override
     public List<UserDTO> getAllUsers() {
 
-        logger.info("Fetching all users");
+        logger.debug("[START] Fetching all users");
 
         List<User> users = userRepository.findAll();
         List<UserDTO> userDTOList = new ArrayList<>();
 
-        for (User user : users) {
+        if(users.isEmpty()) {
 
-            userDTOList.add(new UserDTO(user));
+            logger.warn("[END] No users found int the system");
+        }
+        else {
+
+            for (User user : users) {
+
+                userDTOList.add(new UserDTO(user));
+            }
+
+            logger.debug("[END] Fetched all users successfully");
         }
 
         return userDTOList;
@@ -78,10 +91,15 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserDTO updateUser(String userId, UserDTO userDTO) {
 
-        logger.info("Updating user with ID: {}", userId);
+        logger.debug("[START] Updating user with ID: {}", userId);
 
         User existingUser = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+                .orElseThrow(() -> {
+
+                    logger.error("[END] User with ID ({}) not found", userId);
+                    return new RuntimeException("User not found with ID: " + userId);
+                }
+            );
 
         existingUser.setName(userDTO.getName());
         existingUser.setEmail(userDTO.getEmail());
@@ -92,31 +110,43 @@ public class UserServiceImpl implements IUserService {
 
         User updatedUser = userRepository.save(existingUser);
 
+        logger.debug("[END] User with ID ({}) updated successfully", userId);
+        
         return new UserDTO(updatedUser);
     }
 
     @Override
     public void deleteUser(String userId) {
 
-        logger.info("Deleting user with ID: {}", userId);
+        logger.debug("[START] Deleting user with ID: {}", userId);
 
         User existingUser = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+                .orElseThrow(() -> {
+
+                    logger.error("[END] User with ID ({}) not found", userId);
+                    return new RuntimeException("User not found with ID: " + userId);
+                }
+            );
 
         userRepository.delete(existingUser);
+
+        logger.debug("[END] User with ID ({}) deleted successfully", userId);
     }
 
     @Override
     public UserDTO findByEmail(String email) {
 
-        logger.debug("Fetching user with email: {}", email);
+        logger.debug("[START] Fetching user with email: {}", email);
 
         User user = userRepository.findByEmail(email);
 
         if (user == null) {
 
+            logger.error("No user found with email: {}", email);
             throw new RuntimeException("User not found with email: " + email);
         }
+
+        logger.debug("[END] User with email ({}) fetched successfully", email);
 
         return new UserDTO(user);
     }

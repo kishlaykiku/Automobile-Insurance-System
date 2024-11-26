@@ -10,6 +10,8 @@ import com.hexaware.ais.repository.ClaimRepository;
 import com.hexaware.ais.repository.ProposalRepository;
 import com.hexaware.ais.service.IClaimService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,8 @@ public class ClaimServiceImpl implements IClaimService {
 
     /******************************************* Dependencies *******************************************/
 
+    private static final Logger logger = LoggerFactory.getLogger(ClaimServiceImpl.class);
+
     @Autowired
     private ClaimRepository claimRepository;
 
@@ -35,19 +39,38 @@ public class ClaimServiceImpl implements IClaimService {
     @Override
     public ClaimDTO createClaim(ClaimDTO claimDTO) {
 
+        logger.debug("[START] Creating claim for proposal ID: {}", claimDTO.getProposalId());
+
         Proposal proposal = proposalRepository.findById(claimDTO.getProposalId())
-                .orElseThrow(() -> new RuntimeException("Proposal not found with ID: " + claimDTO.getProposalId()));
+                .orElseThrow(() -> {
+
+                    logger.error("[END] Proposal with ID ({}) not found", claimDTO.getProposalId());
+                    return new RuntimeException("Proposal not found with ID: " + claimDTO.getProposalId());
+                }
+            );
 
         Claim claim = claimDTO.toEntity(proposal);
+        Claim savedClaim = claimRepository.save(claim);
+        
+        logger.debug("[END] Claim created successfully with ID: {}", savedClaim.getClaimId());
 
-        return new ClaimDTO(claimRepository.save(claim));
+        return new ClaimDTO(savedClaim);
     }
 
     @Override
     public ClaimDTO getClaimById(String claimId) {
 
+        logger.debug("[START] Fetching claim with ID: {}", claimId);
+
         Claim claim = claimRepository.findById(claimId)
-                .orElseThrow(() -> new RuntimeException("Claim not found with ID: " + claimId));
+                .orElseThrow(() -> {
+
+                    logger.error("[END] Claim with ID ({}) not found", claimId);
+                    return new RuntimeException("Claim not found with ID: " + claimId);
+                }
+            );
+
+        logger.debug("[END] Claim with ID ({}) fetched successfully", claimId);
 
         return new ClaimDTO(claim);
     }
@@ -55,12 +78,23 @@ public class ClaimServiceImpl implements IClaimService {
     @Override
     public List<ClaimDTO> getAllClaims() {
 
+        logger.debug("[START] Fetching all claims");
+
         List<Claim> claims = claimRepository.findAll();
         List<ClaimDTO> claimDTOs = new ArrayList<>();
 
-        for (Claim claim : claims) {
+        if(claims.isEmpty()) {
 
-            claimDTOs.add(new ClaimDTO(claim));
+            logger.warn("[END] No claims found in the system");
+        }
+        else {
+
+            for (Claim claim : claims) {
+
+                claimDTOs.add(new ClaimDTO(claim));
+            }
+
+            logger.debug("[END] Fetched all claims successfully");
         }
 
         return claimDTOs;
@@ -69,12 +103,24 @@ public class ClaimServiceImpl implements IClaimService {
     @Override
     public List<ClaimDTO> getClaimsByProposalId(String proposalId) {
 
+        logger.debug("[START] Fetching claims for proposal ID: {}", proposalId);
+
         List<Claim> claims = claimRepository.findByProposalProposalId(proposalId);
         List<ClaimDTO> claimDTOs = new ArrayList<>();
 
-        for (Claim claim : claims) {
+        if (claims.isEmpty()) {
 
-            claimDTOs.add(new ClaimDTO(claim));
+            logger.warn("[END] No claims found for proposal ID: {}", proposalId);
+            
+        }
+        else {
+
+            for (Claim claim : claims) {
+
+                claimDTOs.add(new ClaimDTO(claim));
+            }
+
+            logger.debug("[END] Claims for proposal ID ({}) fetched successfully", proposalId);
         }
 
         return claimDTOs;
@@ -83,11 +129,23 @@ public class ClaimServiceImpl implements IClaimService {
     @Override
     public ClaimDTO updateClaim(String claimId, ClaimDTO claimDTO) {
 
+        logger.debug("[START] Updating claim with ID: {}", claimId);
+
         Claim existingClaim = claimRepository.findById(claimId)
-                .orElseThrow(() -> new RuntimeException("Claim not found with ID: " + claimId));
+                .orElseThrow(() -> {
+
+                    logger.error("[END] Claim with ID ({}) not found", claimId);
+                    return new RuntimeException("Claim not found with ID: " + claimId);
+                }
+            );
 
         Proposal proposal = proposalRepository.findById(claimDTO.getProposalId())
-                .orElseThrow(() -> new RuntimeException("Proposal not found with ID: " + claimDTO.getProposalId()));
+                .orElseThrow(() -> {
+
+                    logger.error("[END] Proposal with ID ({}) not found", claimDTO.getProposalId());
+                    return new RuntimeException("Proposal not found with ID: " + claimDTO.getProposalId());
+                }
+            );
 
         existingClaim.setClaimDate(claimDTO.getClaimDate());
         existingClaim.setStatus(claimDTO.getStatus());
@@ -95,15 +153,26 @@ public class ClaimServiceImpl implements IClaimService {
         existingClaim.setRemarks(claimDTO.getRemarks());
         existingClaim.setProposal(proposal);
 
+        logger.debug("[END] Claim with ID ({}) updated successfully", claimId);
+        
         return new ClaimDTO(claimRepository.save(existingClaim));
     }
 
     @Override
     public void deleteClaim(String claimId) {
 
+        logger.debug("[START] Deleting claim with ID: {}", claimId);
+
         Claim existingClaim = claimRepository.findById(claimId)
-                .orElseThrow(() -> new RuntimeException("Claim not found with ID: " + claimId));
+                .orElseThrow(() -> {
+
+                    logger.error("[END] Claim with ID ({}) not found", claimId);
+                    return new RuntimeException("Claim not found with ID: " + claimId);
+                }
+            );
 
         claimRepository.delete(existingClaim);
+
+        logger.debug("[END] Claim with ID ({}) deleted successfully", claimId);
     }
 }
