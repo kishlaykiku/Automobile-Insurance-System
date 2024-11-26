@@ -10,6 +10,8 @@ import com.hexaware.ais.dto.PaymentDTO;
 import com.hexaware.ais.repository.PaymentRepository;
 import com.hexaware.ais.repository.ProposalRepository;
 import com.hexaware.ais.service.IPaymentService;
+import com.hexaware.ais.exception.InvalidArgumentException;
+import com.hexaware.ais.exception.ResourceNotFoundException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +42,12 @@ public class PaymentServiceImpl implements IPaymentService {
     @Override
     public PaymentDTO createPayment(PaymentDTO paymentDTO) {
 
+        if(paymentDTO == null) {
+
+            logger.error("PaymentDTO is null");
+            throw new InvalidArgumentException("Payment data is required.");
+        }
+
         logger.debug("[START] Creating payment with amount {} for proposal ID {}", paymentDTO.getAmount(), paymentDTO.getProposalId());
 
         Payment payment = new Payment();
@@ -54,7 +62,7 @@ public class PaymentServiceImpl implements IPaymentService {
                     .orElseThrow(() -> {
 
                         logger.error("[END] Proposal with ID ({}) not found", paymentDTO.getProposalId());
-                        return new RuntimeException("Proposal not found with ID: " + paymentDTO.getProposalId());
+                        return new ResourceNotFoundException("Proposal not found with ID: " + paymentDTO.getProposalId());
                     }
                 );
 
@@ -71,13 +79,19 @@ public class PaymentServiceImpl implements IPaymentService {
     @Override
     public PaymentDTO getPaymentById(String paymentId) {
 
+        if (paymentId == null || paymentId.isBlank()) {
+
+            logger.error("Payment ID cannot be null or empty");
+            throw new InvalidArgumentException("Payment ID is required.");
+        }
+
         logger.debug("[START] Fetching payment with ID: {}", paymentId);
 
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> {
 
                     logger.error("[END] Payment with ID ({}) not found", paymentId);
-                    return new RuntimeException("Payment not found with ID: " + paymentId);
+                    return new ResourceNotFoundException("Payment not found with ID: " + paymentId);
                 }
             );
 
@@ -97,6 +111,7 @@ public class PaymentServiceImpl implements IPaymentService {
         if(payments.isEmpty()) {
 
             logger.warn("[END] No payments found in the system");
+            throw new ResourceNotFoundException("No payments found in the system.");
         }
         else {
 
@@ -114,6 +129,12 @@ public class PaymentServiceImpl implements IPaymentService {
     @Override
     public List<PaymentDTO> getPaymentsByProposalId(String proposalId) {
 
+        if (proposalId == null || proposalId.isBlank()) {
+
+            logger.error("Proposal ID cannot be null or empty");
+            throw new InvalidArgumentException("Proposal ID is required.");
+        }
+
         logger.debug("[START] Fetching payments for proposal ID: {}", proposalId);
 
         List<Payment> payments = paymentRepository.findByProposalProposalId(proposalId);
@@ -122,6 +143,7 @@ public class PaymentServiceImpl implements IPaymentService {
         if (payments.isEmpty()) {
 
             logger.warn("[END] No payments found for proposal ID: {}", proposalId);
+            throw new ResourceNotFoundException("No payments found for proposal ID: " + proposalId);
         }
         else {
 
@@ -141,11 +163,23 @@ public class PaymentServiceImpl implements IPaymentService {
 
         logger.debug("[START] Updating payment with ID: {}", paymentId);
 
+        if(paymentDTO == null) {
+
+            logger.error("[END] PaymentDTO is null");
+            throw new InvalidArgumentException("Payment data is required.");
+        }
+
+        if (paymentId == null || paymentId.isBlank()) {
+
+            logger.error("[END] Payment ID cannot be null or empty");
+            throw new InvalidArgumentException("Payment ID is required.");
+        }
+
         Payment existingPayment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> {
 
                     logger.error("[END] Payment with ID ({}) not found", paymentId);
-                    return new RuntimeException("Payment not found with ID: " + paymentId);
+                    return new ResourceNotFoundException("Payment not found with ID: " + paymentId);
                 }
             );
 
@@ -160,7 +194,7 @@ public class PaymentServiceImpl implements IPaymentService {
                     .orElseThrow(() -> {
 
                         logger.error("[END] Proposal with ID ({}) not found", paymentDTO.getProposalId());
-                        return new RuntimeException("Proposal not found with ID: " + paymentDTO.getProposalId());
+                        return new ResourceNotFoundException("Proposal not found with ID: " + paymentDTO.getProposalId());
                     }
                 );
 
@@ -177,13 +211,19 @@ public class PaymentServiceImpl implements IPaymentService {
     @Override
     public void deletePayment(String paymentId) {
 
+        if (paymentId == null || paymentId.isBlank()) {
+
+            logger.error("Payment ID cannot be null or empty");
+            throw new InvalidArgumentException("Payment ID is required.");
+        }
+
         logger.debug("[START] Deleting payment with ID: {}", paymentId);
 
         Payment existingPayment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> {
 
                     logger.error("[END] Payment with ID ({}) not found", paymentId);
-                    return new RuntimeException("Payment not found with ID: " + paymentId);
+                    return new ResourceNotFoundException("Payment not found with ID: " + paymentId);
                 }
             );
 
@@ -197,11 +237,29 @@ public class PaymentServiceImpl implements IPaymentService {
 
         logger.debug("[START] Processing payment for proposal ID: {}", proposalId);
 
+        if (proposalId == null || proposalId.isBlank()) {
+
+            logger.error("[END] Proposal ID is required");
+            throw new InvalidArgumentException("Proposal ID is required.");
+        }
+
+        if (amount <= 0) {
+
+            logger.error("[END] Invalid payment amount: {}", amount);
+            throw new InvalidArgumentException("Payment amount must be greater than 0.");
+        }
+
+        if (paymentMethod == null || paymentMethod.isBlank()) {
+
+            logger.error("[END] Payment method is required");
+            throw new InvalidArgumentException("Payment method is required.");
+        }
+
         Proposal proposal = proposalRepository.findById(proposalId)
                 .orElseThrow(() -> {
 
                     logger.error("[END] Proposal with ID ({}) not found", proposalId);
-                    return new RuntimeException("Proposal not found with ID: " + proposalId);
+                    return new ResourceNotFoundException("Proposal not found with ID: " + proposalId);
                 }
             );
 

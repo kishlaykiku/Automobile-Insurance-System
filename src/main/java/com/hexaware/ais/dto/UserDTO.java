@@ -25,6 +25,7 @@ public class UserDTO {
 
     /******************************************* Constructors *******************************************/
 
+    // Default Constructor
     public UserDTO() {
 
         super();
@@ -71,6 +72,9 @@ public class UserDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    public String getPassword() {
+        return password;
     }
 
     public String getAddress() {

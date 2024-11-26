@@ -9,6 +9,8 @@ import com.hexaware.ais.entity.Vehicle;
  */
 public class VehicleDTO {
 
+    /******************************************* Attributes *******************************************/
+
     private String vehicleId;
     private String type;
     private String model;
@@ -16,7 +18,7 @@ public class VehicleDTO {
     private int year;
     private String userId;
 
-    /******************************************* Constructor *******************************************/
+    /******************************************* Constructors *******************************************/
 
     // Default constructor
     public VehicleDTO() {

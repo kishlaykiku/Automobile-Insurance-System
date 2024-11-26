@@ -8,6 +8,8 @@ import com.hexaware.ais.entity.Policy;
 import com.hexaware.ais.dto.PolicyDTO;
 import com.hexaware.ais.repository.PolicyRepository;
 import com.hexaware.ais.service.IPolicyService;
+import com.hexaware.ais.exception.InvalidArgumentException;
+import com.hexaware.ais.exception.ResourceNotFoundException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +37,12 @@ public class PolicyServiceImpl implements IPolicyService {
     @Override
     public PolicyDTO createPolicy(PolicyDTO policyDTO) {
 
+        if(policyDTO == null) {
+
+            logger.error("PolicyDTO is null");
+            throw new InvalidArgumentException("Policy data is required.");
+        }
+
         logger.debug("[START] Creating policy with policy number: {}", policyDTO.getPolicyNo());
 
         Policy policy = new Policy();
@@ -60,13 +68,19 @@ public class PolicyServiceImpl implements IPolicyService {
     @Override
     public PolicyDTO getPolicyById(String policyId) {
 
+        if (policyId == null || policyId.isBlank()) {
+
+            logger.error("Policy ID cannot be null or empty");
+            throw new InvalidArgumentException("Policy ID is required.");
+        }
+
         logger.debug("[START] Fetching policy with ID: {}", policyId);
 
         Policy policy = policyRepository.findById(policyId)
                 .orElseThrow(() -> {
 
                     logger.error("[END] Policy with ID ({}) not found", policyId);
-                    return new RuntimeException("Policy not found with ID: " + policyId);
+                    return new ResourceNotFoundException("Policy not found with ID: " + policyId);
                 }
             );
 
@@ -86,6 +100,7 @@ public class PolicyServiceImpl implements IPolicyService {
         if(policies.isEmpty()) {
 
             logger.warn("[END] No policies found in the system");
+            throw new ResourceNotFoundException("No policies found in the system.");
         }
         else {
 
@@ -117,6 +132,18 @@ public class PolicyServiceImpl implements IPolicyService {
 
         logger.debug("[START] Updating policy with ID: {}", policyId);
 
+        if(policyDTO == null) {
+
+            logger.error("[END] PolicyDTO is null");
+            throw new InvalidArgumentException("Policy data is required.");
+        }
+
+        if (policyId == null || policyId.isBlank()) {
+
+            logger.error("[END] Policy ID cannot be null or empty");
+            throw new InvalidArgumentException("Policy ID is required.");
+        }
+
         Policy existingPolicy = policyRepository.findById(policyId)
                 .orElseThrow(() -> {
 
@@ -146,13 +173,19 @@ public class PolicyServiceImpl implements IPolicyService {
     @Override
     public void deletePolicy(String policyId) {
 
+        if (policyId == null || policyId.isBlank()) {
+
+            logger.error("Policy ID cannot be null or empty");
+            throw new InvalidArgumentException("Policy ID is required.");
+        }
+
         logger.debug("[START] Deleting policy with ID: {}", policyId);
 
         Policy existingPolicy = policyRepository.findById(policyId)
                 .orElseThrow(() -> {
 
                     logger.error("[END] Policy with ID ({}) not found", policyId);
-                    return new RuntimeException("Policy not found with ID: " + policyId);
+                    return new ResourceNotFoundException("Policy not found with ID: " + policyId);
                 }
             );
 
@@ -164,6 +197,12 @@ public class PolicyServiceImpl implements IPolicyService {
     @Override
     public List<PolicyDTO> getPoliciesByUserId(String userId) {
 
+        if (userId == null || userId.isBlank()) {
+
+            logger.error("User ID cannot be null or empty");
+            throw new InvalidArgumentException("User ID is required.");
+        }
+
         logger.debug("[START] Fetching policies for user with ID: {}", userId);
 
         List<Policy> policies = policyRepository.findPoliciesByUserId(userId);
@@ -172,6 +211,7 @@ public class PolicyServiceImpl implements IPolicyService {
         if(policies.isEmpty()) {
 
             logger.warn("[END] No policies found for user with ID: {}", userId);
+            throw new ResourceNotFoundException("No policies found for user with ID: " + userId);
         }
         else {
 

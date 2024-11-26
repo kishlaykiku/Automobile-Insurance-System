@@ -6,11 +6,14 @@ import com.hexaware.ais.entity.Officer;
 import com.hexaware.ais.dto.OfficerDTO;
 import com.hexaware.ais.repository.OfficerRepository;
 import com.hexaware.ais.service.IOfficerService;
+import com.hexaware.ais.exception.InvalidArgumentException;
+import com.hexaware.ais.exception.ResourceNotFoundException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 /*
  * @Author: Kishlay Kumar
@@ -38,7 +41,7 @@ public class OfficerServiceImpl implements IOfficerService {
                 .orElseThrow(() -> {
 
                     logger.error("[END] Admin not found");
-                    return new RuntimeException("Admin not found.");
+                    return new ResourceNotFoundException("Admin not found.");
                 }
             );
 
@@ -52,11 +55,17 @@ public class OfficerServiceImpl implements IOfficerService {
 
         logger.debug("[START] Updating admin details");
 
+        if (officerDTO == null) {
+
+            logger.error("[END] Provided OfficerDTO is null");
+            throw new InvalidArgumentException("Officer details are required.");
+        }    
+
         Officer existingAdmin = officerRepository.findByRole("Admin")
                 .orElseThrow(() -> {
 
                     logger.error("[END] Admin not found");
-                    return new RuntimeException("Admin not found.");
+                    return new ResourceNotFoundException("Admin not found.");
                 }
             );
 
@@ -74,6 +83,11 @@ public class OfficerServiceImpl implements IOfficerService {
     public boolean authenticateAdmin(String email, String password) {
 
         logger.debug("[START] Authenticating admin with email: {}", email);
+
+        if (email == null || password == null) {
+            logger.error("[END] Email and Password must not be null");
+            throw new InvalidArgumentException("Email and Password must not be empty.");
+        }
 
         Optional<Officer> adminOptional = officerRepository.findByEmail(email);
 

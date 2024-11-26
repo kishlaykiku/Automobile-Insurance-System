@@ -11,6 +11,8 @@ import com.hexaware.ais.entity.Proposal;
  */
 public class ProposalDTO {
 
+    /******************************************* Attributes *******************************************/
+
     private String proposalId;
     private LocalDate submissionDate;
     private String status;

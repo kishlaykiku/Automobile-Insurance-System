@@ -4,10 +4,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 
-import com.hexaware.ais.dto.ProposalDTO;
 import com.hexaware.ais.entity.Proposal;
+import com.hexaware.ais.dto.ProposalDTO;
 import com.hexaware.ais.repository.ProposalRepository;
 import com.hexaware.ais.service.IProposalService;
+import com.hexaware.ais.exception.InvalidArgumentException;
+import com.hexaware.ais.exception.ResourceNotFoundException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +37,12 @@ public class ProposalServiceImpl implements IProposalService {
     @Override
     public ProposalDTO createProposal(Proposal proposal) {
 
+        if(proposal == null) {
+
+            logger.error("Proposal is null");
+            throw new InvalidArgumentException("Proposal data is required.");
+        }
+
         logger.debug("[START] Creating proposal for user: {}", proposal.getUser().getUserId());
 
         Proposal savedProposal = proposalRepository.save(proposal);
@@ -46,6 +54,12 @@ public class ProposalServiceImpl implements IProposalService {
 
     @Override
     public ProposalDTO submitProposal(Proposal proposal) {
+
+        if(proposal == null) {
+
+            logger.error("Proposal is null");
+            throw new InvalidArgumentException("Proposal data is required.");
+        }
 
         logger.debug("[START] Submitting proposal for user: {}", proposal.getUser().getUserId());
 
@@ -62,13 +76,19 @@ public class ProposalServiceImpl implements IProposalService {
     @Override
     public ProposalDTO getProposalById(String proposalId) {
 
+        if (proposalId == null || proposalId.isBlank()) {
+
+            logger.error("Proposal ID cannot be null or empty");
+            throw new InvalidArgumentException("Proposal ID is required.");
+        }
+
         logger.debug("[START] Fetching proposal with ID: {}", proposalId);
 
         Proposal proposal = proposalRepository.findById(proposalId)
                 .orElseThrow(() -> {
 
                     logger.error("[END] Proposal with ID ({}) not found", proposalId);
-                    return new RuntimeException("Proposal not found with ID: " + proposalId);
+                    return new ResourceNotFoundException("Proposal not found with ID: " + proposalId);
                 }
             );
 
@@ -80,12 +100,24 @@ public class ProposalServiceImpl implements IProposalService {
     @Override
     public List<ProposalDTO> getAllProposals() {
 
+        logger.debug("[START] Fetching all proposals");
+
         List<Proposal> proposals = proposalRepository.findAll();
         List<ProposalDTO> proposalDTOs = new ArrayList<>();
 
-        for (Proposal proposal : proposals) {
+        if(proposals.isEmpty()) {
 
-            proposalDTOs.add(new ProposalDTO(proposal));
+            logger.warn("No proposals found in the system");
+            throw new ResourceNotFoundException("No proposals found in the system.");
+        }
+        else {
+
+            for (Proposal proposal : proposals) {
+
+                proposalDTOs.add(new ProposalDTO(proposal));
+            }
+
+            logger.debug("[END] Fetched all proposals successfully");
         }
 
         return proposalDTOs;
@@ -94,7 +126,13 @@ public class ProposalServiceImpl implements IProposalService {
     @Override
     public List<ProposalDTO> getProposalsByUserId(String userId) {
 
-        logger.debug("[START] Fetching all proposals");
+        if (userId == null || userId.isBlank()) {
+
+            logger.error("User ID cannot be null or empty");
+            throw new InvalidArgumentException("User ID is required.");
+        }
+
+        logger.debug("[START] Fetching all proposals for user ID: {}", userId);
 
         List<Proposal> proposals = proposalRepository.findByUserUserId(userId);
         List<ProposalDTO> proposalDTOs = new ArrayList<>();
@@ -102,6 +140,7 @@ public class ProposalServiceImpl implements IProposalService {
         if(proposals.isEmpty()) {
 
             logger.warn("[END] No proposals found for user ID: {}", userId);
+            throw new ResourceNotFoundException("No proposals found for user ID: " + userId);
         }
         else {
 
@@ -121,11 +160,23 @@ public class ProposalServiceImpl implements IProposalService {
 
         logger.debug("[START] Updating proposal with ID: {}", proposalId);
 
+        if(updatedProposal == null) {
+
+            logger.error("[END] Proposal is null");
+            throw new InvalidArgumentException("Proposal data is required.");
+        }
+
+        if (proposalId == null || proposalId.isBlank()) {
+
+            logger.error("[END] Proposal ID cannot be null or empty");
+            throw new InvalidArgumentException("Proposal ID is required.");
+        }
+
         Proposal existingProposal = proposalRepository.findById(proposalId)
                 .orElseThrow(() -> {
 
                     logger.error("[END] Proposal with ID ({}) not found", proposalId);
-                    return new RuntimeException("Proposal not found with ID: " + proposalId);
+                    return new ResourceNotFoundException("Proposal not found with ID: " + proposalId);
                 }
             );
 
@@ -148,13 +199,19 @@ public class ProposalServiceImpl implements IProposalService {
     @Override
     public void deleteProposal(String proposalId) {
 
+        if (proposalId == null || proposalId.isBlank()) {
+
+            logger.error("Proposal ID cannot be null or empty");
+            throw new InvalidArgumentException("Proposal ID is required.");
+        }
+
         logger.debug("[START] Deleting proposal with ID: {}", proposalId);
 
         Proposal existingProposal = proposalRepository.findById(proposalId)
                 .orElseThrow(() -> {
 
                     logger.error("[END] Proposal with ID ({}) not found", proposalId);
-                    return new RuntimeException("Proposal not found with ID: " + proposalId);
+                    return new ResourceNotFoundException("Proposal not found with ID: " + proposalId);
                 }
             );
 
@@ -166,13 +223,19 @@ public class ProposalServiceImpl implements IProposalService {
     @Override
     public ProposalDTO approveProposal(String proposalId, String remarks) {
 
+        if (proposalId == null || proposalId.isBlank()) {
+
+            logger.error("Proposal ID cannot be null or empty");
+            throw new InvalidArgumentException("Proposal ID is required.");
+        }
+
         logger.debug("[START] Approving proposal with ID: {}", proposalId);
 
         Proposal proposal = proposalRepository.findById(proposalId)
                 .orElseThrow(() -> {
 
                     logger.error("[END] Proposal with ID ({}) not found", proposalId);
-                    return new RuntimeException("Proposal not found with ID: " + proposalId);
+                    return new ResourceNotFoundException("Proposal not found with ID: " + proposalId);
                 }
             );
 
@@ -189,11 +252,17 @@ public class ProposalServiceImpl implements IProposalService {
     @Override
     public ProposalDTO rejectProposal(String proposalId, String remarks) {
 
+        if (proposalId == null || proposalId.isBlank()) {
+
+            logger.error("Proposal ID cannot be null or empty");
+            throw new InvalidArgumentException("Proposal ID is required.");
+        }
+
         Proposal proposal = proposalRepository.findById(proposalId)
                 .orElseThrow(() -> {
 
                     logger.error("[END] Proposal with ID ({}) not found", proposalId);
-                    return new RuntimeException("Proposal not found with ID: " + proposalId);
+                    return new ResourceNotFoundException("Proposal not found with ID: " + proposalId);
                 }
             );
 
@@ -210,13 +279,19 @@ public class ProposalServiceImpl implements IProposalService {
     @Override
     public ProposalDTO requestAdditionalDetails(String proposalId, String remarks) {
 
+        if (proposalId == null || proposalId.isBlank()) {
+
+            logger.error("Proposal ID cannot be null or empty");
+            throw new InvalidArgumentException("Proposal ID is required.");
+        }
+
         logger.debug("[START] Requesting additional details for proposal ID: {}", proposalId);
 
         Proposal proposal = proposalRepository.findById(proposalId)
                 .orElseThrow(() -> {
 
                     logger.error("[END] Proposal with ID ({}) not found", proposalId);
-                    return new RuntimeException("Proposal not found with ID: " + proposalId);
+                    return new ResourceNotFoundException("Proposal not found with ID: " + proposalId);
                 }
             );
 
@@ -233,13 +308,19 @@ public class ProposalServiceImpl implements IProposalService {
     @Override
     public ProposalDTO sendQuote(String proposalId) {
 
+        if (proposalId == null || proposalId.isBlank()) {
+
+            logger.error("Proposal ID cannot be null or empty");
+            throw new InvalidArgumentException("Proposal ID is required.");
+        }
+
         logger.debug("[START] Sending quote for proposal ID: {}", proposalId);
 
         Proposal proposal = proposalRepository.findById(proposalId)
                 .orElseThrow(() -> {
 
                     logger.error("[END] Proposal with ID ({}) not found", proposalId);
-                    return new RuntimeException("Proposal not found with ID: " + proposalId);
+                    return new ResourceNotFoundException("Proposal not found with ID: " + proposalId);
                 }
             );
 
@@ -247,6 +328,12 @@ public class ProposalServiceImpl implements IProposalService {
 
             logger.error("[END] Proposal with ID ({}) must have status 'Quote Generated' to send a quote", proposalId);
             throw new IllegalStateException("Proposal must have status 'Quote Generated' to send a quote.");
+        }
+
+        if (proposal.getPolicy() == null) {
+
+            logger.error("[END] Proposal with ID ({}) does not have a valid policy", proposalId);
+            throw new InvalidArgumentException("Proposal does not have a valid policy.");
         }
 
         double basePremium = proposal.getPolicy().getBasePremium();
