@@ -5,6 +5,7 @@ import java.util.List;
 import com.hexaware.ais.dto.VehicleDTO;
 import com.hexaware.ais.service.IVehicleService;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class VehicleController {
 
     // Create a new vehicle
     @PostMapping("/create")
-    public ResponseEntity<VehicleDTO> createVehicle(@RequestBody VehicleDTO vehicleDTO) {
+    public ResponseEntity<VehicleDTO> createVehicle(@Valid @RequestBody VehicleDTO vehicleDTO) {
 
         VehicleDTO createdVehicle = vehicleService.createVehicle(vehicleDTO);
 
@@ -64,7 +65,7 @@ public class VehicleController {
 
     // Update a vehicle
     @PutMapping("/update/{vehicleId}")
-    public ResponseEntity<VehicleDTO> updateVehicle(@PathVariable String vehicleId, @RequestBody VehicleDTO vehicle) {
+    public ResponseEntity<VehicleDTO> updateVehicle(@PathVariable String vehicleId, @Valid @RequestBody VehicleDTO vehicle) {
 
         VehicleDTO updatedVehicle = vehicleService.updateVehicle(vehicleId, vehicle);
 

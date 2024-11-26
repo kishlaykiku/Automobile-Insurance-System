@@ -6,6 +6,7 @@ import com.hexaware.ais.entity.Proposal;
 import com.hexaware.ais.dto.ProposalDTO;
 import com.hexaware.ais.service.IProposalService;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class ProposalController {
 
     // Create a new proposal
     @PostMapping("/create")
-    public ResponseEntity<ProposalDTO> createProposal(@RequestBody Proposal proposal) {
+    public ResponseEntity<ProposalDTO> createProposal(@Valid @RequestBody Proposal proposal) {
 
         ProposalDTO createdProposal = proposalService.createProposal(proposal);
 
@@ -38,7 +39,7 @@ public class ProposalController {
 
     // Submit a new proposal
     @PostMapping("/submit-proposal")
-    public ResponseEntity<ProposalDTO> submitProposal(@RequestBody Proposal proposal) {
+    public ResponseEntity<ProposalDTO> submitProposal(@Valid @RequestBody Proposal proposal) {
 
         ProposalDTO submittedProposal = proposalService.submitProposal(proposal);
 
@@ -74,7 +75,7 @@ public class ProposalController {
 
     // Update a proposal
     @PutMapping("/update/{proposalId}")
-    public ResponseEntity<ProposalDTO> updateProposal(@PathVariable String proposalId, @RequestBody Proposal proposal) {
+    public ResponseEntity<ProposalDTO> updateProposal(@PathVariable String proposalId, @Valid @RequestBody Proposal proposal) {
 
         ProposalDTO updatedProposal = proposalService.updateProposal(proposalId, proposal);
 

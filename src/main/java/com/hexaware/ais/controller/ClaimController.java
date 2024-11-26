@@ -5,6 +5,7 @@ import java.util.List;
 import com.hexaware.ais.dto.ClaimDTO;
 import com.hexaware.ais.service.IClaimService;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class ClaimController {
 
     // Create a new claim
     @PostMapping("/create")
-    public ResponseEntity<ClaimDTO> createClaim(@RequestBody ClaimDTO claimDTO) {
+    public ResponseEntity<ClaimDTO> createClaim(@Valid @RequestBody ClaimDTO claimDTO) {
 
         ClaimDTO createdClaim = claimService.createClaim(claimDTO);
 
@@ -64,7 +65,7 @@ public class ClaimController {
 
     // Update a claim
     @PutMapping("/update/{claimId}")
-    public ResponseEntity<ClaimDTO> updateClaim(@PathVariable String claimId, @RequestBody ClaimDTO claimDTO) {
+    public ResponseEntity<ClaimDTO> updateClaim(@PathVariable String claimId, @Valid @RequestBody ClaimDTO claimDTO) {
 
         ClaimDTO updatedClaim = claimService.updateClaim(claimId, claimDTO);
 

@@ -5,6 +5,7 @@ import java.util.List;
 import com.hexaware.ais.dto.UserDTO;
 import com.hexaware.ais.service.IUserService;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class UserController {
 
     // Create a new user
     @PostMapping("/create")
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
 
         UserDTO createdUser = userService.createUser(userDTO);
 
@@ -55,7 +56,7 @@ public class UserController {
 
     // Update a user
     @PutMapping("/update/{userId}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable String userId, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> updateUser(@PathVariable String userId, @Valid @RequestBody UserDTO userDTO) {
 
         UserDTO updatedUser = userService.updateUser(userId, userDTO);
 

@@ -5,6 +5,7 @@ import java.util.List;
 import com.hexaware.ais.dto.PolicyDTO;
 import com.hexaware.ais.service.IPolicyService;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class PolicyController {
 
     // Create a new policy
     @PostMapping("/create")
-    public ResponseEntity<PolicyDTO> createPolicy(@RequestBody PolicyDTO policyDTO) {
+    public ResponseEntity<PolicyDTO> createPolicy(@Valid @RequestBody PolicyDTO policyDTO) {
 
         PolicyDTO createdPolicy = policyService.createPolicy(policyDTO);
 
@@ -64,7 +65,7 @@ public class PolicyController {
 
     // Update a policy
     @PutMapping("/update/{policyId}")
-    public ResponseEntity<PolicyDTO> updatePolicy(@PathVariable String policyId, @RequestBody PolicyDTO policyDTO) {
+    public ResponseEntity<PolicyDTO> updatePolicy(@PathVariable String policyId, @Valid @RequestBody PolicyDTO policyDTO) {
 
         PolicyDTO updatedPolicy = policyService.updatePolicy(policyId, policyDTO);
 

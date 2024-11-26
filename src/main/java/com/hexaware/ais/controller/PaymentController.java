@@ -5,6 +5,7 @@ import java.util.List;
 import com.hexaware.ais.dto.PaymentDTO;
 import com.hexaware.ais.service.IPaymentService;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class PaymentController {
 
     // Create a new payment
     @PostMapping("/create")
-    public ResponseEntity<PaymentDTO> createPayment(@RequestBody PaymentDTO paymentDTO) {
+    public ResponseEntity<PaymentDTO> createPayment(@Valid @RequestBody PaymentDTO paymentDTO) {
 
         PaymentDTO createdPayment = paymentService.createPayment(paymentDTO);
 
@@ -64,7 +65,7 @@ public class PaymentController {
 
     // Update a payment
     @PutMapping("/update/{paymentId}")
-    public ResponseEntity<PaymentDTO> updatePayment(@PathVariable String paymentId, @RequestBody PaymentDTO paymentDTO) {
+    public ResponseEntity<PaymentDTO> updatePayment(@PathVariable String paymentId, @Valid @RequestBody PaymentDTO paymentDTO) {
 
         PaymentDTO updatedPayment = paymentService.updatePayment(paymentId, paymentDTO);
 

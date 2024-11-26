@@ -3,6 +3,7 @@ package com.hexaware.ais.controller;
 import com.hexaware.ais.dto.OfficerDTO;
 import com.hexaware.ais.service.IOfficerService;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,7 @@ public class OfficerController {
 
     // Update admin details
     @PutMapping("/update-admin")
-    public ResponseEntity<OfficerDTO> updateAdminDetails(@RequestBody OfficerDTO officerDTO) {
+    public ResponseEntity<OfficerDTO> updateAdminDetails(@Valid @RequestBody OfficerDTO officerDTO) {
 
         OfficerDTO updatedAdmin = officerService.updateAdminDetails(officerDTO);
 
