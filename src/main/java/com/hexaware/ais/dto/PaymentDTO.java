@@ -3,6 +3,12 @@ package com.hexaware.ais.dto;
 import java.time.LocalDate;
 
 import com.hexaware.ais.entity.Payment;
+import com.hexaware.ais.entity.Proposal;
+
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 
 /*
  * @Author: Kishlay Kumar
@@ -14,10 +20,21 @@ public class PaymentDTO {
     /******************************************* Attributes *******************************************/
 
     private String paymentId;
+
+    @NotNull(message = "Amount is required")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Amount must be greater than 0")
     private double amount;
+
+    @NotNull(message = "Payment date is required")
+    @PastOrPresent(message = "Payment date cannot be in the future")
     private LocalDate paymentDate;
+
+    @NotBlank(message = "Payment method is required")
     private String paymentMethod;
+
+    @NotBlank(message = "Status is required")
     private String status;
+
     private String proposalId;
 
     /******************************************* Constructors *******************************************/
@@ -83,5 +100,22 @@ public class PaymentDTO {
     }
     public void setProposalId(String proposalId) {
         this.proposalId = proposalId;
+    }
+
+    /******************************************* Utility Methods *******************************************/
+
+    // Convert DTO to Entity
+    public Payment toEntity(Proposal proposal) {
+
+        Payment payment = new Payment();
+
+        payment.setPaymentId(this.paymentId);
+        payment.setAmount(this.amount);
+        payment.setPaymentDate(this.paymentDate);
+        payment.setPaymentMethod(this.paymentMethod);
+        payment.setStatus(this.status);
+        payment.setProposal(proposal);
+
+        return payment;
     }
 }

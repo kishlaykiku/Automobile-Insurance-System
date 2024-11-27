@@ -2,7 +2,15 @@ package com.hexaware.ais.dto;
 
 import java.time.LocalDate;
 
+import com.hexaware.ais.entity.Officer;
 import com.hexaware.ais.entity.Proposal;
+import com.hexaware.ais.entity.User;
+import com.hexaware.ais.entity.Vehicle;
+import com.hexaware.ais.entity.Policy;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 
 /*
  * @Author: Kishlay Kumar
@@ -14,13 +22,24 @@ public class ProposalDTO {
     /******************************************* Attributes *******************************************/
 
     private String proposalId;
+
+    @NotNull(message = "Submission date is required")
+    @PastOrPresent(message = "Submission date cannot be in the future")
     private LocalDate submissionDate;
+
+    @NotBlank(message = "Status is required")
     private String status;
+
     private String additionalDocs;
+
     private String remarks;
+
     private String userId;
+
     private String vehicleId;
+
     private String policyId;
+
     private String officerId;
 
     /******************************************* Constructors *******************************************/
@@ -110,5 +129,25 @@ public class ProposalDTO {
     }
     public void setOfficerId(String officerId) {
         this.officerId = officerId;
+    }
+
+    /******************************************* Utility Methods *******************************************/
+
+    // Convert DTO to Entity
+    public Proposal toEntity(User user, Vehicle vehicle, Policy policy, Officer officer) {
+
+        Proposal proposal = new Proposal();
+
+        proposal.setProposalId(this.proposalId);
+        proposal.setSubmissionDate(this.submissionDate);
+        proposal.setStatus(this.status);
+        proposal.setAdditionalDocs(this.additionalDocs);
+        proposal.setRemarks(this.remarks);
+        proposal.setUser(user);
+        proposal.setVehicle(vehicle);
+        proposal.setPolicy(policy);
+        proposal.setOfficer(officer);
+
+        return proposal;
     }
 }

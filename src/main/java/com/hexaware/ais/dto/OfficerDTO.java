@@ -2,6 +2,9 @@ package com.hexaware.ais.dto;
 
 import com.hexaware.ais.entity.Officer;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 /*
  * @Author: Kishlay Kumar
  * Class: OfficerDTO
@@ -12,8 +15,15 @@ public class OfficerDTO {
     /******************************************* Attributes *******************************************/
 
     private String officerId;
+
+    @NotBlank(message = "Name is required")
     private String name;
+
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email should be valid")
     private String email;
+
+    @NotBlank(message = "Role is required")
     private String role;
 
     /******************************************* Constructors *******************************************/

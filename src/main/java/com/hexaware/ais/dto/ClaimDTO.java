@@ -5,6 +5,11 @@ import java.time.LocalDate;
 import com.hexaware.ais.entity.Claim;
 import com.hexaware.ais.entity.Proposal;
 
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+
 /*
  * @Author: Kishlay Kumar
  * Class: ClaimDTO
@@ -15,10 +20,20 @@ public class ClaimDTO {
     /******************************************* Attributes *******************************************/
 
     private String claimId;
+
+    @NotNull(message = "Claim date is required")
+    @PastOrPresent(message = "Claim date cannot be in the future")
     private LocalDate claimDate;
+
+    @NotBlank(message = "Status is required")
     private String status;
+
+    @NotNull(message = "Claim amount is required")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Claim amount must be greater than 0")
     private double amount;
+
     private String remarks;
+
     private String proposalId;
 
     /******************************************* Constructors *******************************************/

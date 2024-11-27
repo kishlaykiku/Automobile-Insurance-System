@@ -4,6 +4,12 @@ import java.time.LocalDate;
 
 import com.hexaware.ais.entity.User;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
 /*
  * @Author: Kishlay Kumar
  * Class: UserDTO
@@ -14,12 +20,27 @@ public class UserDTO {
     /******************************************* Attributes *******************************************/
 
     private String userId;
+
+    @NotBlank(message = "Name is required")
     private String name;
+
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email should be valid")
     private String email;
+
+    @NotBlank(message = "Password is required")
+    @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
+
     private String address;
+
+    @Past(message = "Date of Birth must be in the past")
     private LocalDate dob;
+
+    @Size(min = 12, max = 12, message = "Aadhaar number must be 12 digits")
     private String aadharNo;
+
+    @Pattern(regexp = "[A-Z]{5}[0-9]{4}[A-Z]{1}", message = "Invalid PAN number format")
     private String panNo;
     private LocalDate createdAt;
 
@@ -124,6 +145,7 @@ public class UserDTO {
         user.setDob(this.dob);
         user.setAadharNo(this.aadharNo);
         user.setPanNo(this.panNo);
+
         return user;
     }
 }

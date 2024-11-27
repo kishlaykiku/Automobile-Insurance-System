@@ -2,6 +2,12 @@ package com.hexaware.ais.dto;
 
 import com.hexaware.ais.entity.Policy;
 
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 
 /*
@@ -14,15 +20,34 @@ public class PolicyDTO {
     /******************************************* Attributes *******************************************/
 
     private String policyId;
+
+    @NotBlank(message = "Policy number is required")
     private String policyNo;
+
+    @NotBlank(message = "Policy type is required")
     private String type;
+
+    @NotNull(message = "Base premium is required")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Base premium must be greater than 0")
     private double basePremium;
+
     private String features;
+
     private String addOns;
+
+    @NotNull(message = "Start date is required")
+    @FutureOrPresent(message = "Start date must be today or in the future")
     private LocalDate startDate;
+
+    @NotNull(message = "End date is required")
+    @Future(message = "End date must be in the future")
     private LocalDate endDate;
+
     private LocalDate renewalDate;
+
+    @NotBlank(message = "Status is required")
     private String status;
+
     private boolean reminderSent;
 
     /******************************************* Constructors *******************************************/
@@ -128,5 +153,27 @@ public class PolicyDTO {
     }
     public void setReminderSent(boolean reminderSent) {
         this.reminderSent = reminderSent;
+    }
+
+    /******************************************* Utility Methods *******************************************/
+
+    // Convert DTO to Entity
+    public Policy toEntity() {
+
+        Policy policy = new Policy();
+
+        policy.setPolicyId(this.policyId);
+        policy.setPolicyNo(this.policyNo);
+        policy.setType(this.type);
+        policy.setBasePremium(this.basePremium);
+        policy.setFeatures(this.features);
+        policy.setAddOns(this.addOns);
+        policy.setStartDate(this.startDate);
+        policy.setEndDate(this.endDate);
+        policy.setRenewalDate(this.renewalDate);
+        policy.setStatus(this.status);
+        policy.setReminderSent(this.reminderSent);
+
+        return policy;
     }
 }

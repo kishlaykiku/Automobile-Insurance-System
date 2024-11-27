@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
  * Class: GlobalExceptionHandler
  * Description: This class handles all exceptions thrown by the application
  */
+// @ControllerAdvice
 public class GlobalExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);

@@ -1,6 +1,10 @@
 package com.hexaware.ais.dto;
 
+import com.hexaware.ais.entity.User;
 import com.hexaware.ais.entity.Vehicle;
+
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
 /*
  * @Author: Kishlay Kumar
@@ -12,10 +16,19 @@ public class VehicleDTO {
     /******************************************* Attributes *******************************************/
 
     private String vehicleId;
+
+    @NotBlank(message = "Vehicle type is required")
     private String type;
+
+    @NotBlank(message = "Vehicle model is required")
     private String model;
+
+    @NotBlank(message = "Registration number is required")
     private String registrationNo;
+
+    @Min(value = 1886, message = "Year must be after 1886")
     private int year;
+
     private String userId;
 
     /******************************************* Constructors *******************************************/
@@ -81,5 +94,22 @@ public class VehicleDTO {
     }
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    /******************************************* Utility Methods *******************************************/
+
+    // Convert DTO to Entity
+    public Vehicle toEntity(User user) {
+
+        Vehicle vehicle = new Vehicle();
+
+        vehicle.setVehicleId(this.vehicleId);
+        vehicle.setType(this.type);
+        vehicle.setModel(this.model);
+        vehicle.setRegistrationNo(this.registrationNo);
+        vehicle.setYear(this.year);
+        vehicle.setUser(user);
+
+        return vehicle;
     }
 }
