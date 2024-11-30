@@ -100,11 +100,13 @@ CREATE TABLE audit_log (
     details TEXT
 );
 
--- Total Modules: 8
--- [User, Vehicle, Policy, Officer, Proposal, Payment, Claim, Audit Log]
+-- Total Modules: 7
+-- [User, Vehicle, Policy, Officer, Proposal, Payment, Claim,]
 
 
 -- For Testing
+USE `insurancesystem`;
+
 DROP DATABASE `insurancesystem`;
 
 SELECT * FROM user;

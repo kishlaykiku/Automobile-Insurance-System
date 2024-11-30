@@ -8,6 +8,7 @@ import com.hexaware.ais.service.IVehicleService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -27,7 +28,8 @@ public class VehicleController {
 
     /******************************************* Endpoints *******************************************/
 
-    // Create a new vehicle
+    // Create a new vehicle (User Only)
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/create")
     public ResponseEntity<VehicleDTO> createVehicle(@Valid @RequestBody VehicleDTO vehicleDTO) {
 
@@ -36,7 +38,8 @@ public class VehicleController {
         return ResponseEntity.ok(createdVehicle);
     }
 
-    // Get a vehicle by ID
+    // Get a vehicle by ID (User and Officer)
+    @PreAuthorize("hasAnyRole('USER', 'OFFICER')")
     @GetMapping("/get/{vehicleId}")
     public ResponseEntity<VehicleDTO> getVehicleById(@PathVariable String vehicleId) {
 
@@ -45,7 +48,8 @@ public class VehicleController {
         return ResponseEntity.ok(vehicle);
     }
 
-    // Get all vehicles
+    // Get all vehicles (Officer Only)
+    @PreAuthorize("hasRole('OFFICER')")
     @GetMapping("/getall")
     public ResponseEntity<List<VehicleDTO>> getAllVehicles() {
 
@@ -54,7 +58,8 @@ public class VehicleController {
         return ResponseEntity.ok(vehicles);
     }
 
-    // Get vehicles by user ID
+    // Get vehicles by user ID (User and Officer)
+    @PreAuthorize("hasAnyRole('USER', 'OFFICER')")
     @GetMapping("/get/vehicle-by-user/{userId}")
     public ResponseEntity<List<VehicleDTO>> getVehiclesByUserId(@PathVariable String userId) {
 
@@ -63,7 +68,8 @@ public class VehicleController {
         return ResponseEntity.ok(vehicles);
     }
 
-    // Update a vehicle
+    // Update a vehicle (User Only)
+    @PreAuthorize("hasRole('USER')")
     @PutMapping("/update/{vehicleId}")
     public ResponseEntity<VehicleDTO> updateVehicle(@PathVariable String vehicleId, @Valid @RequestBody VehicleDTO vehicle) {
 
@@ -72,7 +78,8 @@ public class VehicleController {
         return ResponseEntity.ok(updatedVehicle);
     }
 
-    // Delete a vehicle
+    // Delete a vehicle (User Only)
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/delete/{vehicleId}")
     public ResponseEntity<String> deleteVehicle(@PathVariable String vehicleId) {
 

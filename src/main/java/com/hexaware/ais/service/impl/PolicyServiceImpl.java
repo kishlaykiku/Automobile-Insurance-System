@@ -100,7 +100,7 @@ public class PolicyServiceImpl implements IPolicyService {
         if(policies.isEmpty()) {
 
             logger.warn("[END] No policies found in the system");
-            throw new ResourceNotFoundException("No policies found in the system.");
+            return new ArrayList<>();
         }
         else {
 
@@ -211,7 +211,7 @@ public class PolicyServiceImpl implements IPolicyService {
         if(policies.isEmpty()) {
 
             logger.warn("[END] No policies found for user with ID: {}", userId);
-            throw new ResourceNotFoundException("No policies found for user with ID: " + userId);
+            return new ArrayList<>();
         }
         else {
 

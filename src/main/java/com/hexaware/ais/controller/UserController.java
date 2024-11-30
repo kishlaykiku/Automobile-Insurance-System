@@ -8,6 +8,7 @@ import com.hexaware.ais.service.IUserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -27,7 +28,7 @@ public class UserController {
 
     /******************************************* Endpoints *******************************************/
 
-    // Create a new user
+    // Create a new user (Public)
     @PostMapping("/create")
     public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {
 
@@ -36,7 +37,8 @@ public class UserController {
         return ResponseEntity.ok(createdUser);
     }
 
-    // Get a user by ID
+    // Get a user by ID (User Only)
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/get/{userId}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable String userId) {
 
@@ -45,7 +47,8 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    // Get all users
+    // Get all users (Officer Only)
+    @PreAuthorize("hasRole('OFFICER')")
     @GetMapping("/getall")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
 
@@ -54,7 +57,8 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    // Update a user
+    // Update a user (User Only)
+    @PreAuthorize("hasRole('USER') and authentication.name == #userDTO.email")
     @PutMapping("/update/{userId}")
     public ResponseEntity<UserDTO> updateUser(@PathVariable String userId, @Valid @RequestBody UserDTO userDTO) {
 
@@ -63,7 +67,8 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
-    // Delete a user
+    // Delete a user (User Only)
+    @PreAuthorize("hasRole('USER') and @userService.getUserById(#userId).email == principal.username")
     @DeleteMapping("/delete/{userId}")
     public ResponseEntity<String> deleteUser(@PathVariable String userId) {
 
@@ -72,7 +77,8 @@ public class UserController {
         return ResponseEntity.ok("User deleted successfully");
     }
 
-    // Find a user by email
+    // Find a user by email (User Only)
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/get/user-by-email/{email}")
     public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
 

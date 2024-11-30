@@ -41,20 +41,4 @@ public class OfficerController {
 
         return ResponseEntity.ok(updatedAdmin);
     }
-
-    // Authenticate admin credentials
-    @PostMapping("/authenticate")
-    public ResponseEntity<String> authenticateAdmin(@RequestParam String email, @RequestParam String password) {
-
-        boolean isAuthenticated = officerService.authenticateAdmin(email, password);
-
-        if (isAuthenticated) {
-    
-            return ResponseEntity.ok("Authentication successful.");
-        }
-        else {
-
-            return ResponseEntity.status(401).body("Invalid credentials.");
-        }
-    }
 }

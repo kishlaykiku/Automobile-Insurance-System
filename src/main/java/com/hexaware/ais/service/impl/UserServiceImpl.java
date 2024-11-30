@@ -14,6 +14,7 @@ import com.hexaware.ais.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Service;
  * Class: UserServiceImpl
  * Description: This class implements the IUserService interface for user-related operations
  */
-@Service
+@Service("userService")
 public class UserServiceImpl implements IUserService {
 
     /******************************************* Dependencies *******************************************/
@@ -31,6 +32,9 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /******************************************* Methods *******************************************/
 
@@ -45,6 +49,16 @@ public class UserServiceImpl implements IUserService {
         }
 
         logger.debug("[START] Creating user with email: {}", userDTO.getEmail());
+
+        if (userRepository.findByEmail(userDTO.getEmail()) != null) {
+
+            logger.error("[END] User with email ({}) already exists", userDTO.getEmail());
+            throw new BadRequestException("User already exists with this email.");
+        }
+
+        // Encrypt the password
+        String encryptedPassword = passwordEncoder.encode(userDTO.getPassword());
+        userDTO.setPassword(encryptedPassword);
 
         User user = userDTO.toEntity();
         User savedUser = userRepository.save(user);
@@ -91,7 +105,7 @@ public class UserServiceImpl implements IUserService {
         if(users.isEmpty()) {
 
             logger.warn("[END] No users found in the system");
-            throw new ResourceNotFoundException("No users found in the system.");
+            return new ArrayList<>();
         }
         else {
 
@@ -131,6 +145,12 @@ public class UserServiceImpl implements IUserService {
                     return new ResourceNotFoundException("User not found with ID: " + userId);
                 }
             );
+
+        if (!existingUser.getEmail().equals(userDTO.getEmail()) && userRepository.findByEmail(userDTO.getEmail()) != null) {
+
+            logger.error("[END] User with email ({}) already exists", userDTO.getEmail());
+            throw new BadRequestException("User already exists with this email.");
+        }
 
         existingUser.setName(userDTO.getName());
         existingUser.setEmail(userDTO.getEmail());

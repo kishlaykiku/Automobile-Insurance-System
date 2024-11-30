@@ -1,7 +1,5 @@
 package com.hexaware.ais.service.impl;
 
-import java.util.Optional;
-
 import com.hexaware.ais.entity.Officer;
 import com.hexaware.ais.dto.OfficerDTO;
 import com.hexaware.ais.repository.OfficerRepository;
@@ -77,40 +75,5 @@ public class OfficerServiceImpl implements IOfficerService {
         logger.debug("[END] Admin details updated successfully");
 
         return new OfficerDTO(existingAdmin);
-    }
-
-    @Override
-    public boolean authenticateAdmin(String email, String password) {
-
-        logger.debug("[START] Authenticating admin with email: {}", email);
-
-        if (email == null || password == null) {
-            logger.error("[END] Email and Password must not be null");
-            throw new InvalidArgumentException("Email and Password must not be empty.");
-        }
-
-        Optional<Officer> adminOptional = officerRepository.findByEmail(email);
-
-        if (adminOptional.isPresent()) {
-
-            Officer admin = adminOptional.get();
-
-            if (admin.getPassword().equals(password)) {
-
-                logger.debug("[END] Admin authentication successful for email: {}", email);
-
-                return true;
-            }
-            else {
-
-                logger.warn("[END] Invalid password for email: {}", email);
-
-                return false;
-            }
-        }
-
-        logger.warn("[END] Admin with email ({}) not found", email);
-
-        return false;
     }
 }

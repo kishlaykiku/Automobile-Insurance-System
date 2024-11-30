@@ -14,7 +14,4 @@ public interface IOfficerService {
 
     // Update admin details
     OfficerDTO updateAdminDetails(OfficerDTO officerDTO);
-
-    // Authenticate admin credentials
-    boolean authenticateAdmin(String email, String password);
 }

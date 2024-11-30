@@ -8,6 +8,7 @@ import com.hexaware.ais.service.IPolicyService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -27,7 +28,8 @@ public class PolicyController {
 
     /******************************************* Endpoints *******************************************/
 
-    // Create a new policy
+    // Create a new policy (Officer Only)
+    @PreAuthorize("hasRole('OFFICER')")
     @PostMapping("/create")
     public ResponseEntity<PolicyDTO> createPolicy(@Valid @RequestBody PolicyDTO policyDTO) {
 
@@ -36,7 +38,8 @@ public class PolicyController {
         return ResponseEntity.ok(createdPolicy);
     }
 
-    // Get a policy by ID
+    // Get a policy by ID (User and Officer)
+    @PreAuthorize("hasAnyRole('USER', 'OFFICER')")
     @GetMapping("/get/{policyId}")
     public ResponseEntity<PolicyDTO> getPolicyById(@PathVariable String policyId) {
 
@@ -45,7 +48,8 @@ public class PolicyController {
         return ResponseEntity.ok(policy);
     }
 
-    // Get all policies
+    // Get all policies (Officer Only)
+    @PreAuthorize("hasRole('OFFICER')")
     @GetMapping("/getall")
     public ResponseEntity<List<PolicyDTO>> getAllPolicies() {
 
@@ -54,7 +58,7 @@ public class PolicyController {
         return ResponseEntity.ok(policies);
     }
 
-    // Fetch active policy count
+    // Fetch active policy count (Public Access)
     @GetMapping("/get/statistics/active-policy")
     public ResponseEntity<Long> getActivePolicyCount() {
 
@@ -63,7 +67,8 @@ public class PolicyController {
         return ResponseEntity.ok(activePolicyCount);
     }
 
-    // Update a policy
+    // Update a policy (Officer Only)
+    @PreAuthorize("hasRole('OFFICER')")
     @PutMapping("/update/{policyId}")
     public ResponseEntity<PolicyDTO> updatePolicy(@PathVariable String policyId, @Valid @RequestBody PolicyDTO policyDTO) {
 
@@ -73,6 +78,7 @@ public class PolicyController {
     }
 
     // Delete a policy
+    @PreAuthorize("hasRole('OFFICER')")
     @DeleteMapping("/delete/{policyId}")
     public ResponseEntity<String> deletePolicy(@PathVariable String policyId) {
 
@@ -81,7 +87,8 @@ public class PolicyController {
         return ResponseEntity.ok("Policy deleted successfully");
     }
 
-    // Get all policies for a user
+    // Get all policies for a user (User Only)
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/get/policy-by-user/{userId}")
     public ResponseEntity<List<PolicyDTO>> getPoliciesByUserId(@PathVariable String userId) {
 
@@ -90,7 +97,8 @@ public class PolicyController {
         return ResponseEntity.ok(policies);
     }
 
-    // Send premium reminders
+    // Send premium reminders (Officer Only)
+    @PreAuthorize("hasRole('OFFICER')")
     @PutMapping("/send-premium-reminders")
     public ResponseEntity<List<PolicyDTO>> sendPremiumReminders() {
 

@@ -8,6 +8,7 @@ import com.hexaware.ais.service.IPaymentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -27,7 +28,8 @@ public class PaymentController {
 
     /******************************************* Endpoints *******************************************/
 
-    // Create a new payment
+    // Create a new payment (User and Officer)
+    @PreAuthorize("hasAnyRole('USER', 'OFFICER')")
     @PostMapping("/create")
     public ResponseEntity<PaymentDTO> createPayment(@Valid @RequestBody PaymentDTO paymentDTO) {
 
@@ -36,7 +38,8 @@ public class PaymentController {
         return ResponseEntity.ok(createdPayment);
     }
 
-    // Get a payment by ID
+    // Get a payment by ID (User and Officer)
+    @PreAuthorize("hasAnyRole('USER', 'OFFICER')")
     @GetMapping("/get/{paymentId}")
     public ResponseEntity<PaymentDTO> getPaymentById(@PathVariable String paymentId) {
 
@@ -45,7 +48,8 @@ public class PaymentController {
         return ResponseEntity.ok(payment);
     }
 
-    // Get all payments
+    // Get all payments (Officer Only)
+    @PreAuthorize("hasRole('OFFICER')")
     @GetMapping("/getall")
     public ResponseEntity<List<PaymentDTO>> getAllPayments() {
 
@@ -54,7 +58,8 @@ public class PaymentController {
         return ResponseEntity.ok(payments);
     }
 
-    // Get payments by proposal ID
+    // Get payments by proposal ID (User and Officer)
+    @PreAuthorize("hasAnyRole('USER', 'OFFICER')")
     @GetMapping("/get/payment-by-proposal/{proposalId}")
     public ResponseEntity<List<PaymentDTO>> getPaymentsByProposalId(@PathVariable String proposalId) {
 
@@ -63,7 +68,8 @@ public class PaymentController {
         return ResponseEntity.ok(payments);
     }
 
-    // Update a payment
+    // Update a payment (User Only)
+    @PreAuthorize("hasRole('USER')")
     @PutMapping("/update/{paymentId}")
     public ResponseEntity<PaymentDTO> updatePayment(@PathVariable String paymentId, @Valid @RequestBody PaymentDTO paymentDTO) {
 
@@ -72,7 +78,8 @@ public class PaymentController {
         return ResponseEntity.ok(updatedPayment);
     }
 
-    // Delete a payment
+    // Delete a payment (User Only)
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/delete/{paymentId}")
     public ResponseEntity<String> deletePayment(@PathVariable String paymentId) {
 
@@ -81,7 +88,8 @@ public class PaymentController {
         return ResponseEntity.ok("Payment deleted successfully");
     }
 
-    // Process a payment
+    // Process a payment (User Only)
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/process-pay/{proposalId}")
     public ResponseEntity<PaymentDTO> processPayment(@PathVariable String proposalId, @RequestParam double amount, @RequestParam String paymentMethod) {
 

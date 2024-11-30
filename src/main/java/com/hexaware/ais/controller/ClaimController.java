@@ -8,6 +8,7 @@ import com.hexaware.ais.service.IClaimService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -27,7 +28,8 @@ public class ClaimController {
 
     /******************************************* Endpoints *******************************************/
 
-    // Create a new claim
+    // Create a new claim (User Only)
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/create")
     public ResponseEntity<ClaimDTO> createClaim(@Valid @RequestBody ClaimDTO claimDTO) {
 
@@ -36,7 +38,8 @@ public class ClaimController {
         return ResponseEntity.ok(createdClaim);
     }
 
-    // Get a claim by ID
+    // Get a claim by ID (User and Officer)
+    @PreAuthorize("hasAnyRole('USER', 'OFFICER')")
     @GetMapping("/get/{claimId}")
     public ResponseEntity<ClaimDTO> getClaimById(@PathVariable String claimId) {
 
@@ -45,7 +48,8 @@ public class ClaimController {
         return ResponseEntity.ok(claim);
     }
 
-    // Get all claims
+    // Get all claims (Officer Only)
+    @PreAuthorize("hasRole('OFFICER')")
     @GetMapping("/getall")
     public ResponseEntity<List<ClaimDTO>> getAllClaims() {
 
@@ -54,7 +58,8 @@ public class ClaimController {
         return ResponseEntity.ok(claims);
     }
 
-    // Get claims by proposal ID
+    // Get claims by proposal ID (User Only)
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/get/claim-by-proposal/{proposalId}")
     public ResponseEntity<List<ClaimDTO>> getClaimsByProposalId(@PathVariable String proposalId) {
 
@@ -63,7 +68,8 @@ public class ClaimController {
         return ResponseEntity.ok(claims);
     }
 
-    // Update a claim
+    // Update a claim (User Only)
+    @PreAuthorize("hasRole('USER')")
     @PutMapping("/update/{claimId}")
     public ResponseEntity<ClaimDTO> updateClaim(@PathVariable String claimId, @Valid @RequestBody ClaimDTO claimDTO) {
 
@@ -72,7 +78,8 @@ public class ClaimController {
         return ResponseEntity.ok(updatedClaim);
     }
 
-    // Delete a claim
+    // Delete a claim (User Only)
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/delete/{claimId}")
     public ResponseEntity<String> deleteClaim(@PathVariable String claimId) {
 
