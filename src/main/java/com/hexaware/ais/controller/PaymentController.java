@@ -28,14 +28,14 @@ public class PaymentController {
 
     /******************************************* Endpoints *******************************************/
 
-    // Create a new payment (User and Officer)
-    @PreAuthorize("hasAnyRole('USER', 'OFFICER')")
-    @PostMapping("/create")
-    public ResponseEntity<PaymentDTO> createPayment(@Valid @RequestBody PaymentDTO paymentDTO) {
+    // Process (Create) a payment (User Only)
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/process-pay/{proposalId}")
+    public ResponseEntity<PaymentDTO> processPayment(@PathVariable String proposalId, @RequestParam double amount, @RequestParam String paymentMethod) {
 
-        PaymentDTO createdPayment = paymentService.createPayment(paymentDTO);
+        PaymentDTO payment = paymentService.processPayment(proposalId, amount, paymentMethod);
 
-        return ResponseEntity.ok(createdPayment);
+        return ResponseEntity.ok(payment);
     }
 
     // Get a payment by ID (User and Officer)
@@ -86,15 +86,5 @@ public class PaymentController {
         paymentService.deletePayment(paymentId);
 
         return ResponseEntity.ok("Payment deleted successfully");
-    }
-
-    // Process a payment (User Only)
-    @PreAuthorize("hasRole('USER')")
-    @PostMapping("/process-pay/{proposalId}")
-    public ResponseEntity<PaymentDTO> processPayment(@PathVariable String proposalId, @RequestParam double amount, @RequestParam String paymentMethod) {
-
-        PaymentDTO payment = paymentService.processPayment(proposalId, amount, paymentMethod);
-
-        return ResponseEntity.ok(payment);
     }
 }

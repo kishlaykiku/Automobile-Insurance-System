@@ -14,8 +14,8 @@ public interface IPaymentService {
 
     /******************************************* Method Signatures *******************************************/
 
-    // Create a new payment
-    PaymentDTO createPayment(PaymentDTO paymentDTO);
+    // Process a payment
+    PaymentDTO processPayment(String proposalId, double amount, String paymentMethod);
 
     // Get a payment by ID
     PaymentDTO getPaymentById(String paymentId);
@@ -31,7 +31,4 @@ public interface IPaymentService {
 
     // Delete a payment
     void deletePayment(String paymentId);
-
-    // Process a payment
-    PaymentDTO processPayment(String proposalId, double amount, String paymentMethod);
 }

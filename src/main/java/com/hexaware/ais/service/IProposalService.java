@@ -15,10 +15,7 @@ public interface IProposalService {
 
     /******************************************* Method Signatures *******************************************/
 
-    // Create a new proposal
-    ProposalDTO createProposal(Proposal proposal);
-
-    // Submit a proposal
+    // Create and submit a proposal
     ProposalDTO submitProposal(Proposal proposal);
 
     // Get a proposal by ID
