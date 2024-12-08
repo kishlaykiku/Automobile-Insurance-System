@@ -46,11 +46,7 @@ build/
 /bazel-out
 
 # Node
-<<<<<<< HEAD
 node_modules/
-=======
-/node_modules
->>>>>>> 80a654ea3d5d6bb82ab3d3ede8acb37f0da7d038
 npm-debug.log
 yarn-error.log
 
