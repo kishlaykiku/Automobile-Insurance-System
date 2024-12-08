@@ -62,4 +62,21 @@ public class CustomUserDetailsService implements UserDetailsService {
         // If not found in either table, throw exception
         throw new UsernameNotFoundException("User not found with email: " + username);
     }
+
+    public String getRoleByUsername(String username) {
+        // Fetch from User repository
+        User user = userRepository.findByEmail(username);
+        if (user != null) {
+            return "ROLE_USER";
+        }
+
+        // Fetch from Officer repository
+        Optional<Officer> officerOptional = officerRepository.findByEmail(username);
+        if (officerOptional.isPresent()) {
+            return "ROLE_OFFICER";
+        }
+
+        // Return null if no role is found
+        return null;
+    }
 }

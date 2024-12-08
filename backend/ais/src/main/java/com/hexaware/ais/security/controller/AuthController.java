@@ -2,6 +2,7 @@ package com.hexaware.ais.security.controller;
 
 import com.hexaware.ais.security.dto.AuthRequest;
 import com.hexaware.ais.security.dto.AuthResponse;
+import com.hexaware.ais.security.service.CustomUserDetailsService;
 import com.hexaware.ais.security.util.JwtUtil;
 
 import org.slf4j.Logger;
@@ -34,10 +35,14 @@ public class AuthController {
     @Autowired
     private final JwtUtil jwtUtil;
 
-    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+    @Autowired
+    private final CustomUserDetailsService customUserDetailsService;
+
+    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil, CustomUserDetailsService customUserDetailsService) {
 
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.customUserDetailsService = customUserDetailsService;
     }
 
     // Login endpoint to authenticate user credentials and issue a JWT token
@@ -49,8 +54,11 @@ public class AuthController {
             // Authenticate user credentials
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
 
+            // Fetch user role
+            String role = customUserDetailsService.getRoleByUsername(authRequest.getUsername());
+
             // Generate JWT token
-            String jwtToken = jwtUtil.generateToken(authRequest.getUsername());
+            String jwtToken = jwtUtil.generateToken(authRequest.getUsername(), role);
 
             logger.info("User {} logged in successfully", authRequest.getUsername());
 
