@@ -35,24 +35,6 @@ public class ProposalServiceImpl implements IProposalService {
     /******************************************* Methods *******************************************/
 
     @Override
-    public ProposalDTO createProposal(Proposal proposal) {
-
-        if(proposal == null) {
-
-            logger.error("Proposal is null");
-            throw new InvalidArgumentException("Proposal data is required.");
-        }
-
-        logger.debug("[START] Creating proposal for user: {}", proposal.getUser().getUserId());
-
-        Proposal savedProposal = proposalRepository.save(proposal);
-
-        logger.debug("[END] Proposal created with ID: {}", savedProposal.getProposalId());
-
-        return new ProposalDTO(savedProposal);
-    }
-
-    @Override
     public ProposalDTO submitProposal(Proposal proposal) {
 
         if(proposal == null) {

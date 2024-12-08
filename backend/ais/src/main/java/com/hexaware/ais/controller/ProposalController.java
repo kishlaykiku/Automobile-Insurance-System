@@ -29,16 +29,6 @@ public class ProposalController {
 
     /******************************************* Endpoints *******************************************/
 
-    // Create a new proposal (User Only)
-    @PreAuthorize("hasRole('USER')")
-    @PostMapping("/create")
-    public ResponseEntity<ProposalDTO> createProposal(@Valid @RequestBody Proposal proposal) {
-
-        ProposalDTO createdProposal = proposalService.createProposal(proposal);
-
-        return ResponseEntity.ok(createdProposal);
-    }
-
     // Submit a new proposal (User Only)
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/submit-proposal")

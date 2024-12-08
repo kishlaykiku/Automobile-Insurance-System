@@ -40,38 +40,61 @@ public class PaymentServiceImpl implements IPaymentService {
     /******************************************* Methods *******************************************/
 
     @Override
-    public PaymentDTO createPayment(PaymentDTO paymentDTO) {
+    public PaymentDTO processPayment(String proposalId, double amount, String paymentMethod) {
 
-        if(paymentDTO == null) {
+        logger.debug("[START] Processing payment for proposal ID: {}", proposalId);
 
-            logger.error("PaymentDTO is null");
-            throw new InvalidArgumentException("Payment data is required.");
+        if (proposalId == null || proposalId.isBlank()) {
+
+            logger.error("[END] Proposal ID is required");
+            throw new InvalidArgumentException("Proposal ID is required.");
         }
 
-        logger.debug("[START] Creating payment with amount {} for proposal ID {}", paymentDTO.getAmount(), paymentDTO.getProposalId());
+        if (amount <= 0) {
+
+            logger.error("[END] Invalid payment amount: {}", amount);
+            throw new InvalidArgumentException("Payment amount must be greater than 0.");
+        }
+
+        if (paymentMethod == null || paymentMethod.isBlank()) {
+
+            logger.error("[END] Payment method is required");
+            throw new InvalidArgumentException("Payment method is required.");
+        }
+
+        Proposal proposal = proposalRepository.findById(proposalId)
+                .orElseThrow(() -> {
+
+                    logger.error("[END] Proposal with ID ({}) not found", proposalId);
+                    return new ResourceNotFoundException("Proposal not found with ID: " + proposalId);
+                }
+            );
+
+        if (!"Quote Generated".equals(proposal.getStatus())) {
+
+            logger.error("[END] Payment cannot be processed for proposal ID ({}) as status is not 'Quote Generated'", proposalId);
+            throw new IllegalStateException("Payment can only be made for proposals with status 'Quote Generated'.");
+        }
 
         Payment payment = new Payment();
 
-        payment.setAmount(paymentDTO.getAmount());
-        payment.setPaymentMethod(paymentDTO.getPaymentMethod());
-        payment.setStatus(paymentDTO.getStatus());
-
-        if (paymentDTO.getProposalId() != null) {
-
-            Proposal proposal = proposalRepository.findById(paymentDTO.getProposalId())
-                    .orElseThrow(() -> {
-
-                        logger.error("[END] Proposal with ID ({}) not found", paymentDTO.getProposalId());
-                        return new ResourceNotFoundException("Proposal not found with ID: " + paymentDTO.getProposalId());
-                    }
-                );
-
-            payment.setProposal(proposal);
-        }
+        payment.setProposal(proposal);
+        payment.setAmount(amount);
+        payment.setPaymentMethod(paymentMethod);
+        payment.setPaymentDate(LocalDate.now());
+        payment.setStatus("Completed");
 
         Payment savedPayment = paymentRepository.save(payment);
 
-        logger.debug("[END] Payment created successfully with ID: {}", savedPayment.getPaymentId());
+        proposal.setStatus("Active");
+        proposal.setRemarks("Policy activated. Payment received via " + paymentMethod + ".");
+
+        proposalRepository.save(proposal);
+
+        logger.info("Payment received for proposal: " + proposalId);
+        logger.info("Policy document sent to user: " + proposal.getUser().getEmail());
+
+        logger.debug("[END] Payment for proposal ID ({}) processed successfully", proposalId);
 
         return new PaymentDTO(savedPayment);
     }
@@ -230,65 +253,5 @@ public class PaymentServiceImpl implements IPaymentService {
         paymentRepository.delete(existingPayment);
 
         logger.debug("[END] Payment with ID ({}) deleted successfully", paymentId);
-    }
-
-    @Override
-    public PaymentDTO processPayment(String proposalId, double amount, String paymentMethod) {
-
-        logger.debug("[START] Processing payment for proposal ID: {}", proposalId);
-
-        if (proposalId == null || proposalId.isBlank()) {
-
-            logger.error("[END] Proposal ID is required");
-            throw new InvalidArgumentException("Proposal ID is required.");
-        }
-
-        if (amount <= 0) {
-
-            logger.error("[END] Invalid payment amount: {}", amount);
-            throw new InvalidArgumentException("Payment amount must be greater than 0.");
-        }
-
-        if (paymentMethod == null || paymentMethod.isBlank()) {
-
-            logger.error("[END] Payment method is required");
-            throw new InvalidArgumentException("Payment method is required.");
-        }
-
-        Proposal proposal = proposalRepository.findById(proposalId)
-                .orElseThrow(() -> {
-
-                    logger.error("[END] Proposal with ID ({}) not found", proposalId);
-                    return new ResourceNotFoundException("Proposal not found with ID: " + proposalId);
-                }
-            );
-
-        if (!"Quote Generated".equals(proposal.getStatus())) {
-
-            logger.error("[END] Payment cannot be processed for proposal ID ({}) as status is not 'Quote Generated'", proposalId);
-            throw new IllegalStateException("Payment can only be made for proposals with status 'Quote Generated'.");
-        }
-
-        Payment payment = new Payment();
-
-        payment.setProposal(proposal);
-        payment.setAmount(amount);
-        payment.setPaymentMethod(paymentMethod);
-        payment.setPaymentDate(LocalDate.now());
-        payment.setStatus("Completed");
-
-        Payment savedPayment = paymentRepository.save(payment);
-
-        proposal.setStatus("Active");
-        proposal.setRemarks("Policy activated. Payment received via " + paymentMethod + ".");
-
-        proposalRepository.save(proposal);
-
-        logger.info("Payment received for proposal: " + proposalId);
-        logger.info("Policy document sent to user: " + proposal.getUser().getEmail());
-
-        logger.debug("[END] Payment for proposal ID ({}) processed successfully", proposalId);
-
-        return new PaymentDTO(savedPayment);
     }
 }
