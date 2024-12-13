@@ -1,0 +1,63 @@
+.logo-final img {
+    width: 150px;
+}
+
+.logo-init img {
+    width: 150px;
+}
+
+.login-form-target-anim {
+    animation: fadeInLeft;
+    animation-duration: 0.8s;
+}
+
+.divider {
+    animation: zoomIn;
+    animation-duration: 1s;
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.logo-init img {
+    animation: breathe 1s ease-in-out infinite;
+}
+
+@keyframes breathe {
+    0% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.5;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .logo-final img,
+    .login-form-target-anim {
+        width: 100%;
+    }
+
+    .divider {
+        height: 2px;
+        width: 80%;
+        margin: 0 auto;
+    }
+}

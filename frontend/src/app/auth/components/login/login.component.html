@@ -1,15 +1,76 @@
-<div class="container mt-5">
-    <h2>Login</h2>
-    <form (submit)="onLogin()">
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" [(ngModel)]="email" id="email" name="email" class="form-control" required />
+<div class="container d-flex justify-content-center align-items-center flex-row mt-5" style="gap: 7rem;">    
+
+    <div class="d-flex justify-content-center align-items-center flex-row" style="gap: 2rem;">
+        <div class="logo-final">
+            <img src="assets/favicon.ico" alt="No Logo">
         </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" [(ngModel)]="password" id="password" name="password" class="form-control" required />
+
+        <div class="d-flex animate__animated animate__zoomIn" style="height: 500px;">
+            <div class="divider vr" style="color: #fff;"></div>
         </div>
-        <button type="submit" class="btn btn-primary">Login</button>
-        <button type="button" class="btn btn-link" (click)="onCreateAccount()">Create Account</button>
-    </form>
+    </div>
+
+    <div class="d-flex justify-content-center align-items-center">
+
+        <div class="login-form-target-anim bg-dark p-4 rounded animate__animated animate__fadeInLeft" style="width: 350px;">
+
+            <h2 class="text-center text-light">Login</h2>
+
+            <div *ngIf="isLoading" class="text-center text-light mt-3">
+                <span class="loader"></span>
+            </div>
+
+            <form #loginForm="ngForm" (ngSubmit)="onLogin()" *ngIf="!isLoading" class="mt-3">
+
+                <!-- Enter Email -->
+                <div class="mb-3">
+                    <label for="email" class="form-label text-light">Email</label>
+                    <input
+                        type="email"
+                        [(ngModel)]="email"
+                        id="email"
+                        name="email"
+                        class="form-control bg-secondary text-light border-0"
+                        required
+                        #emailInput="ngModel" />
+                    <small *ngIf="emailInput.invalid && emailInput.touched" class="text-danger">
+                        Valid email is required.
+                    </small>
+                </div>
+
+                <!-- Enter Password -->
+                <div class="mb-3">
+                    <label for="password" class="form-label text-light">Password</label>
+                    <input
+                        type="password"
+                        [(ngModel)]="password"
+                        id="password"
+                        name="password"
+                        class="form-control bg-secondary text-light border-0"
+                        required
+                        #passwordInput="ngModel" />
+                    <small *ngIf="passwordInput.invalid && passwordInput.touched" class="text-danger">
+                        Password is required.
+                    </small>
+                </div>
+
+                <!-- Login Button -->
+                <button
+                    type="submit"
+                    class="btn btn-light w-100"
+                    [disabled]="loginForm.invalid">
+                    Login
+                </button>
+
+                <!-- Create Account Link -->
+                <button
+                    type="button"
+                    class="btn btn-link text-light w-100 mt-2"
+                    (click)="onCreateAccount()"
+                    style="color: #ff3d00 !important;">
+                    Don't have an account? Register here.
+                </button>
+            </form>
+        </div>
+    </div>
 </div>

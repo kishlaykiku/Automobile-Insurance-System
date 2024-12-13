@@ -3,6 +3,7 @@ import { LogoutComponent } from "../logout/logout.component";
 import { AuthService } from '../../services/auth.service';
 import { NgIf } from '@angular/common';
 
+
 @Component({
     selector: 'app-header',
     standalone: true,
@@ -17,6 +18,7 @@ export class HeaderComponent {
     constructor(private authService: AuthService) {}
 
     ngOnInit(): void {
+
         this.authService.loggedIn$.subscribe((status) => {
             this.isLoggedIn = status;
         });

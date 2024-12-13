@@ -1,1 +1,38 @@
 /* You can add global styles to this file, and also import other style files */
+
+body {
+    background-color: #121212 !important;
+    color: #ffffff;
+}
+
+.loader {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+.loader::after {
+    content: '';  
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: #ff3d00;
+    width: 10px;
+    height: 10px;
+    transform: translate(-50%, 50%);
+    border-radius: 50%;
+}
+      
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
