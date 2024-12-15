@@ -48,8 +48,8 @@ public class PolicyController {
         return ResponseEntity.ok(policy);
     }
 
-    // Get all policies (Officer Only)
-    @PreAuthorize("hasRole('OFFICER')")
+    // Get all policies (User and Officer)
+    @PreAuthorize("hasAnyRole('USER', 'OFFICER')")
     @GetMapping("/getall")
     public ResponseEntity<List<PolicyDTO>> getAllPolicies() {
 

@@ -39,13 +39,18 @@ public class SecurityConfig {
 
     @Bean
     public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
+
+        config.setAllowCredentials(true); // Allow credentials (Authorization header)
         config.addAllowedOrigin("http://localhost:4200"); // Allow Angular application
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
+        config.addAllowedHeader("*"); // Allow all headers
+        config.addAllowedMethod("*"); // Allow all HTTP methods (GET, POST, etc.)
+        config.addExposedHeader("Authorization"); // Expose Authorization header to the client
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
+
         return new CorsFilter(source);
     }
 
@@ -54,6 +59,18 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(csrf -> csrf.disable())
+            .cors(cors -> cors.configurationSource(request -> {
+
+                CorsConfiguration config = new CorsConfiguration();
+
+                config.setAllowCredentials(true);
+                config.addAllowedOrigin("http://localhost:4200");
+                config.addAllowedHeader("*");
+                config.addAllowedMethod("*");
+                config.addExposedHeader("Authorization");
+
+                return config;
+            }))
             .authorizeHttpRequests(requests -> requests
             // Public authentication endpoints
             .requestMatchers("/api/auth/**", "/api/users/create", "/api/policies/get/statistics/active-policy", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**", "/swagger-resources/**").permitAll() // Public authentication endpoints

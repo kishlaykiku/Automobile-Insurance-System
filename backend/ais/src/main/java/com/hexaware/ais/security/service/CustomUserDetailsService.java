@@ -64,6 +64,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     public String getRoleByUsername(String username) {
+
         // Fetch from User repository
         User user = userRepository.findByEmail(username);
         if (user != null) {
@@ -77,6 +78,33 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
         // Return null if no role is found
+        return null;
+    }
+
+    public String getNameByUsername(String username) {
+
+        // Check if user exists in User repository
+        User user = userRepository.findByEmail(username);
+        if (user != null) {
+            return user.getName(); // Assuming User entity has a 'name' field
+        }
+
+        // Check if user exists in Officer repository
+        Optional<Officer> officerOptional = officerRepository.findByEmail(username);
+        if (officerOptional.isPresent()) {
+            Officer officer = officerOptional.get();
+            return officer.getName(); // Assuming Officer entity has a 'name' field
+        }
+
+        // If not found in either repository, return null or throw an exception
+        return null;
+    }
+
+    public String getUserIdByUsername(String username) {
+        User user = userRepository.findByEmail(username);
+        if (user != null) {
+            return user.getUserId();
+        }
         return null;
     }
 }

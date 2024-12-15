@@ -42,6 +42,13 @@ public class ProposalDTO {
 
     private String officerId;
 
+    // Related entities
+    private PolicyDTO policy;
+    private VehicleDTO vehicle;
+    private UserDTO user;
+
+    private String name;
+
     /******************************************* Constructors *******************************************/
 
     // Default Constructor
@@ -129,6 +136,34 @@ public class ProposalDTO {
     }
     public void setOfficerId(String officerId) {
         this.officerId = officerId;
+    }
+
+    public PolicyDTO getPolicy() {
+        return policy;
+    }
+    public void setPolicy(PolicyDTO policy) {
+        this.policy = policy;
+    }
+
+    public VehicleDTO getVehicle() {
+        return vehicle;
+    }
+    public void setVehicle(VehicleDTO vehicle) {
+        this.vehicle = vehicle;
+    }
+
+    public UserDTO getUser() {
+        return user;
+    }
+    public void setUser(UserDTO user) {
+        this.user = user;
+    }
+
+    public String getOfficerName() {
+        return name;
+    }
+    public void setOfficerName(String name) {
+        this.name = name;
     }
 
     /******************************************* Utility Methods *******************************************/

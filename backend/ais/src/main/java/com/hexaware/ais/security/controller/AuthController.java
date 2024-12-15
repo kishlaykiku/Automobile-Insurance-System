@@ -57,8 +57,14 @@ public class AuthController {
             // Fetch user role
             String role = customUserDetailsService.getRoleByUsername(authRequest.getUsername());
 
+            // Fetch user name
+            String name = customUserDetailsService.getNameByUsername(authRequest.getUsername());
+
+            // Fetch user ID
+            String userId = customUserDetailsService.getUserIdByUsername(authRequest.getUsername());
+
             // Generate JWT token
-            String jwtToken = jwtUtil.generateToken(authRequest.getUsername(), role);
+            String jwtToken = jwtUtil.generateToken(authRequest.getUsername(), role, name, userId);
 
             logger.info("User {} logged in successfully", authRequest.getUsername());
 

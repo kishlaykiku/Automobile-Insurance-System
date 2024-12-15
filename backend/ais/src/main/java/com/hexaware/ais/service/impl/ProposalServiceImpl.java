@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.ArrayList;
 
 import com.hexaware.ais.entity.Proposal;
+import com.hexaware.ais.dto.PolicyDTO;
 import com.hexaware.ais.dto.ProposalDTO;
+import com.hexaware.ais.dto.UserDTO;
+import com.hexaware.ais.dto.VehicleDTO;
 import com.hexaware.ais.repository.ProposalRepository;
 import com.hexaware.ais.service.IProposalService;
 import com.hexaware.ais.exception.InvalidArgumentException;
@@ -74,9 +77,29 @@ public class ProposalServiceImpl implements IProposalService {
                 }
             );
 
+        ProposalDTO proposalDTO = new ProposalDTO(proposal);
+
+        // Map related entities to DTOs
+        if (proposal.getPolicy() != null) {
+
+            proposalDTO.setPolicy(new PolicyDTO(proposal.getPolicy()));
+        }
+        if (proposal.getVehicle() != null) {
+
+            proposalDTO.setVehicle(new VehicleDTO(proposal.getVehicle()));
+        }
+        if (proposal.getUser() != null) {
+
+            proposalDTO.setUser(new UserDTO(proposal.getUser()));
+        }
+        if (proposal.getOfficer() != null) {
+
+            proposalDTO.setOfficerName(proposal.getOfficer().getName());
+        }
+
         logger.debug("[END] Proposal with ID ({}) fetched successfully", proposalId);
 
-        return new ProposalDTO(proposal);
+            return proposalDTO;
     }
 
     @Override
@@ -127,11 +150,30 @@ public class ProposalServiceImpl implements IProposalService {
         else {
 
             for (Proposal proposal : proposals) {
+                ProposalDTO proposalDTO = new ProposalDTO(proposal);
 
-                proposalDTOs.add(new ProposalDTO(proposal));
+                // Map related entities to DTOs
+                if (proposal.getPolicy() != null) {
+
+                    proposalDTO.setPolicy(new PolicyDTO(proposal.getPolicy()));
+                }
+                if (proposal.getVehicle() != null) {
+
+                    proposalDTO.setVehicle(new VehicleDTO(proposal.getVehicle()));
+                }
+                if (proposal.getUser() != null) {
+
+                    proposalDTO.setUser(new UserDTO(proposal.getUser()));
+                }
+                if (proposal.getOfficer() != null) {
+
+                    proposalDTO.setOfficerName(proposal.getOfficer().getName());
+                }
+
+                proposalDTOs.add(proposalDTO);
             }
 
-            logger.debug("[END] Fetched all proposals successfully");
+            logger.debug("[END] Fetched all proposals successfully for user ID: {}", userId);
         }
 
         return proposalDTOs;

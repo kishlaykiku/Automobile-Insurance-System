@@ -23,11 +23,13 @@ public class JwtUtil {
     private final String SECRET_KEY = dotenv.get("JWT_SECRET_KEY");
     private final long EXPIRATION_TIME = Long.parseLong(dotenv.get("JWT_EXPIRATION_TIME", "36000000")); // Default: 10 hours
 
-    public String generateToken(String username, String role) {
+    public String generateToken(String username, String role, String name, String userId) {
 
         return Jwts.builder()
                 .setSubject(username)
                 .claim("role", role)
+                .claim("name", name)
+                .claim("userId", userId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()), SignatureAlgorithm.HS256)
@@ -96,6 +98,20 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody()
                 .get("role", String.class);
-        return generateToken(username, role);
+        String name = Jwts.parserBuilder()
+                .setSigningKey(SECRET_KEY.getBytes())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("name", String.class);
+
+        String userId = Jwts.parserBuilder()
+                .setSigningKey(SECRET_KEY.getBytes())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("userId", String.class);
+
+        return generateToken(username, role, name, userId);
     }
 }
