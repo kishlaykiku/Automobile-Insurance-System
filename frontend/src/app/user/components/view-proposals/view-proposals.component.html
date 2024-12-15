@@ -1,0 +1,88 @@
+<div class="container mt-5 text-light">
+
+    <h3 class="mb-4">Proposals</h3>
+
+    <!-- Loader -->
+    <div *ngIf="isLoading" class="text-center text-light mt-3">
+        <span class="loader"></span>
+    </div>
+
+    <!-- Filter and Sort -->
+    <div *ngIf="!isLoading" class="d-flex justify-content-between mb-3">
+
+        <div>
+            <label for="filter" class="form-label">Filter Proposals:</label>
+            <select class="form-select bg-dark text-light" [(ngModel)]="filterCriteria" (change)="applyFilter()">
+                <option value="all">All</option>
+                <option value="pending">Pending</option>
+                <option value="rejected">Rejected</option>
+                <option value="approved">Approved</option>
+                <option value="document requested">Document Requested</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="sort" class="form-label">Sort By:</label>
+            <select class="form-select bg-dark text-light" [(ngModel)]="sortCriteria" (change)="applySort()">
+                <option value="proposalId">Proposal ID</option>
+                <option value="submissionDate">Submission Date</option>
+            </select>
+        </div>
+
+    </div>
+
+    <!-- Proposals Table -->
+    <table *ngIf="!isLoading" class="table table-dark table-hover">
+
+        <thead>
+            <tr>
+                <th>Proposal ID</th>
+                <th>Policy No</th>
+                <th>Status</th>
+                <th>Submission Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let proposal of filteredProposals">
+                <td>{{ proposal.proposalId }}</td>
+                <td>{{ proposal.policy.policyNo || 'N/A'}}</td>
+                <td>{{ proposal.status }}</td>
+                <td>{{ proposal.submissionDate | date }}</td>
+                <td>
+                    <button class="btn btn-light btn-sm" (click)="viewDetails(proposal)">View</button>
+                    <button class="btn btn-danger btn-sm ms-2" (click)="deleteProposal(proposal.proposalId)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+</div>
+
+<!-- Proposal Details Modal -->
+<div class="modal fade" id="proposalDetailsModal" tabindex="-1" aria-labelledby="proposalDetailsLabel" aria-hidden="true">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content bg-dark text-light">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="proposalDetailsLabel">Proposal Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <p><strong>Proposal ID:</strong> {{ selectedProposal?.proposalId }}</p>
+                <p><strong>Policy No:</strong> {{ selectedProposal?.policy?.policyNo || 'N/A' }}</p>
+                <p><strong>Status:</strong> {{ selectedProposal?.status }}</p>
+                <p><strong>Submission Date:</strong> {{ selectedProposal?.submissionDate | date }}</p>
+                <p><strong>Vehicle:</strong> {{ selectedProposal?.vehicle?.registrationNo || 'N/A' }}</p>
+                <p><strong>Reviewer:</strong> {{ selectedProposal?.officerName || 'Not Assigned' }}</p>
+                <p><strong>User:</strong> {{ selectedProposal?.user?.name || 'N/A' }}</p>
+            </div>
+
+        </div>
+
+    </div>
+</div>

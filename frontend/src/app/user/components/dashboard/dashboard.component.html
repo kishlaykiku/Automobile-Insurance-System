@@ -1,1 +1,31 @@
-<h1>Welcome User</h1>
+<div class="container mt-5 text-light">
+
+    <!-- Welcome Message -->
+    <h2>Welcome, {{ userName }}!</h2>
+    <p class="text-light text-muted">Here are your account details at a glance:</p>
+
+    <!-- Summary Cards -->
+    <div class="row mt-4">
+
+        <!-- View Policies Card -->
+        <div class="col-md-6">
+            <div class="card bg-secondary text-light" (click)="onViewPolicies()">
+                <div class="card-body">
+                    <h5 class="card-title text-center">View Policies</h5>
+                    <p class="card-text text-center">See all your active and expired policies.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Proposals Card -->
+        <div class="col-md-6">
+            <div class="card bg-secondary text-light" (click)="onViewProposals()">
+                <div class="card-body">
+                    <h5 class="card-title text-center">View Proposals</h5>
+                    <p class="card-text text-center">Check the status of your submitted proposals.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

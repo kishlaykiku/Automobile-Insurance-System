@@ -65,6 +65,17 @@ export class AuthService {
 
         return !!this.getToken();
     }
+    
+    decodeToken(token: string): any {
+
+        try {
+            return jwtDecode(token);
+        }
+        catch (error) {
+            console.error('Error decoding token:', error);
+            return null;
+        }
+    }
 
     logout(): Observable<string> {
 
@@ -72,4 +83,5 @@ export class AuthService {
         this.loggedInSubject.next(false); // Updating login state
         return this.http.post(`${this.apiUrl}/auth/logout`, {}, { responseType: 'text' });
     }
+    
 }
