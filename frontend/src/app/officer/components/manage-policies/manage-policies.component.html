@@ -1,1 +1,96 @@
-<p>manage-policies works!</p>
+<div class="container mt-5 text-light">
+
+    <h3 class="mb-4">Manage Policies</h3>
+
+    <!-- Loader -->
+    <div *ngIf="isLoading" class="text-center text-light mt-3">
+        <span class="loader"></span>
+    </div>
+
+    <!-- Filter and Sort Dropdowns -->
+    <div *ngIf="!isLoading" class="d-flex justify-content-between mb-3">
+
+        <div>
+            <label for="filter" class="form-label">Filter Policies:</label>
+            <select
+                class="form-select bg-dark text-light"
+                [(ngModel)]="filterCriteria"
+                (change)="applyFilter()">
+                    <option value="all">All Policies</option>
+                    <option value="active">Active Policies</option>
+                    <option value="expired">Expired Policies</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="sort" class="form-label">Sort By:</label>
+            <select
+                class="form-select bg-dark text-light"
+                [(ngModel)]="sortCriteria"
+                (change)="applySort()">
+                    <option value="default">Default</option>
+                    <option value="policyNo">Policy No</option>
+                    <option value="startDate">Start Date</option>
+                    <option value="endDate">End Date</option>
+            </select>
+        </div>
+
+    </div>
+
+    <!-- Policies Table -->
+    <table *ngIf="!isLoading" class="table table-dark table-hover animate__animated animate__fadeIn animate__faster">
+
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Policy No</th>
+                <th>Status</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr *ngFor="let policy of filteredPolicies; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ policy.policyNo }}</td>
+                <td>{{ policy.status }}</td>
+                <td>{{ policy.startDate | date }}</td>
+                <td>{{ policy.endDate | date }}</td>
+                <td>
+                    <button class="btn btn-light btn-sm" (click)="viewDetails(policy)">View</button>
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+</div>
+
+<!-- Policy Details Modal -->
+<div *ngIf="!isLoading" class="modal fade" id="policyDetailsModal" tabindex="-1" aria-labelledby="policyDetailsLabel" aria-hidden="true">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content bg-dark text-light">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="policyDetailsLabel">Policy Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <p><strong>Policy No:</strong> {{ selectedPolicy?.policyNo }}</p>
+                <p><strong>Features:</strong> {{ selectedPolicy?.features }}</p>
+                <p><strong>Premium:</strong> {{ selectedPolicy?.basePremium | currency:'INR' }}</p>
+                <p><strong>Type:</strong> {{ selectedPolicy?.type }}</p>
+                <p><strong>Start Date:</strong> {{ selectedPolicy?.startDate | date }}</p>
+                <p><strong>End Date:</strong> {{ selectedPolicy?.endDate | date }}</p>
+                <p><strong>Renewal Date:</strong> {{ selectedPolicy?.renewalDate | date }}</p>
+                <p><strong>Status:</strong> {{ selectedPolicy?.status }}</p>
+                <p><strong>Add Ons:</strong> {{ selectedPolicy?.addOns }}</p>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -4,12 +4,18 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 
+import com.hexaware.ais.entity.Officer;
 import com.hexaware.ais.entity.Proposal;
+import com.hexaware.ais.entity.User;
+import com.hexaware.ais.entity.Vehicle;
 import com.hexaware.ais.dto.PolicyDTO;
 import com.hexaware.ais.dto.ProposalDTO;
 import com.hexaware.ais.dto.UserDTO;
 import com.hexaware.ais.dto.VehicleDTO;
+import com.hexaware.ais.repository.OfficerRepository;
 import com.hexaware.ais.repository.ProposalRepository;
+import com.hexaware.ais.repository.UserRepository;
+import com.hexaware.ais.repository.VehicleRepository;
 import com.hexaware.ais.service.IProposalService;
 import com.hexaware.ais.exception.InvalidArgumentException;
 import com.hexaware.ais.exception.ResourceNotFoundException;
@@ -30,10 +36,19 @@ public class ProposalServiceImpl implements IProposalService {
 
     /******************************************* Dependencies *******************************************/
 
-    private static final Logger logger = LoggerFactory.getLogger(ProposalServiceImpl.class);
-
+    
+private static final Logger logger = LoggerFactory.getLogger(ProposalServiceImpl.class);
     @Autowired
     private ProposalRepository proposalRepository;
+
+    @Autowired
+    private VehicleRepository vehicleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private OfficerRepository officerRepository;
 
     /******************************************* Methods *******************************************/
 
@@ -46,7 +61,37 @@ public class ProposalServiceImpl implements IProposalService {
             throw new InvalidArgumentException("Proposal data is required.");
         }
 
+        if (proposal.getUser() == null || proposal.getUser().getUserId() == null) {
+
+            logger.error("User information is missing in the proposal");
+            throw new InvalidArgumentException("User information is required.");
+        }
+
+        if (proposal.getVehicle() == null) {
+
+            throw new InvalidArgumentException("Vehicle information is required.");
+        }
+
+        if (proposal.getOfficer() == null || proposal.getOfficer().getOfficerId() == null) {
+
+            throw new InvalidArgumentException("Officer information is required.");
+        }
+
         logger.debug("[START] Submitting proposal for user: {}", proposal.getUser().getUserId());
+
+        User user = userRepository.findById(proposal.getUser().getUserId())
+            .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + proposal.getUser().getUserId()));
+
+        Officer officer = officerRepository.findById(proposal.getOfficer().getOfficerId())
+            .orElseThrow(() -> new ResourceNotFoundException("Officer not found with ID: " + proposal.getOfficer().getOfficerId()));
+
+        proposal.setOfficer(officer);
+
+        Vehicle vehicle = proposal.getVehicle();
+        vehicle.setUser(user);
+
+        Vehicle savedVehicle = vehicleRepository.save(vehicle);
+        proposal.setVehicle(savedVehicle);
 
         proposal.setSubmissionDate(LocalDate.now());
         proposal.setStatus("Proposal Submitted");

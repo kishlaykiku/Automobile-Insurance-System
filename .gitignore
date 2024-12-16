@@ -44,7 +44,7 @@ build/
 ################# Frontend ignore files #################
 
 # Compiled output
-/dist
+dist/
 /tmp
 /out-tsc
 /bazel-out

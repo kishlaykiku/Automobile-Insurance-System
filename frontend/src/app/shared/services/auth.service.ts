@@ -43,8 +43,8 @@ export class AuthService {
 
     storeToken(token: string): void {
 
-        localStorage.setItem('auth_token', token); // Storing token in local storage
-        this.loggedInSubject.next(!!token); // Updating login state
+        localStorage.setItem('auth_token', token);
+        this.loggedInSubject.next(!!token);
     }
 
     getToken(): string | null {

@@ -45,6 +45,22 @@ export class ProposalService {
         return this.http.get(`${this.apiUrl}/proposals/get/${proposalId}`, { headers });
     }
 
+    submitProposal(proposal: any): Observable<any> {
+
+        const token = this.authService.getToken();
+        if (!token) {
+
+            console.error('No token available');
+            return throwError(() => new Error('User not authenticated'));
+        }
+
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${token}`,
+        });
+
+        return this.http.post(`${this.apiUrl}/proposals/submit-proposal`, proposal, { headers });
+    }
+
     deleteProposal(proposalId: string): Observable<any> {
 
         const token = this.authService.getToken();

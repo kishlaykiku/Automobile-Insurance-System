@@ -6,6 +6,7 @@ import com.hexaware.ais.service.IOfficerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /*
@@ -25,6 +26,7 @@ public class OfficerController {
     /******************************************* Endpoints *******************************************/
 
     // Retrieve admin details
+    @PreAuthorize("hasRole('OFFICER')")
     @GetMapping("/admin-details")
     public ResponseEntity<OfficerDTO> getAdminDetails() {
 
@@ -34,6 +36,7 @@ public class OfficerController {
     }
 
     // Update admin details
+    @PreAuthorize("hasRole('OFFICER')")
     @PutMapping("/update-admin")
     public ResponseEntity<OfficerDTO> updateAdminDetails(@Valid @RequestBody OfficerDTO officerDTO) {
 

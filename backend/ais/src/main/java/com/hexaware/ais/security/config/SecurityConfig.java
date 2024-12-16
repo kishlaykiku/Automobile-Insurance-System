@@ -43,7 +43,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true); // Allow credentials (Authorization header)
-        config.addAllowedOrigin("http://localhost:4200"); // Allow Angular application
+        config.addAllowedOrigin("http://localhost:4200"); // http://localhost:4200 http://insurance-system-angular.s3-website.eu-north-1.amazonaws.com/
         config.addAllowedHeader("*"); // Allow all headers
         config.addAllowedMethod("*"); // Allow all HTTP methods (GET, POST, etc.)
         config.addExposedHeader("Authorization"); // Expose Authorization header to the client
@@ -64,7 +64,7 @@ public class SecurityConfig {
                 CorsConfiguration config = new CorsConfiguration();
 
                 config.setAllowCredentials(true);
-                config.addAllowedOrigin("http://localhost:4200");
+                config.addAllowedOrigin("http://localhost:4200"); // http://localhost:4200 http://insurance-system-angular.s3-website.eu-north-1.amazonaws.com/
                 config.addAllowedHeader("*");
                 config.addAllowedMethod("*");
                 config.addExposedHeader("Authorization");

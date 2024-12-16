@@ -90,16 +90,6 @@ CREATE TABLE claim (
     FOREIGN KEY (proposal_id) REFERENCES proposal(proposal_id)
 );
 
--- Audit Log Table
-CREATE TABLE audit_log (
-    log_id VARCHAR(255) PRIMARY KEY,
-    entity_type VARCHAR(255) NOT NULL,
-    entity_id VARCHAR(255) NOT NULL,
-    action VARCHAR(255) NOT NULL,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    details TEXT
-);
-
 -- Total Modules: 7
 -- [User, Vehicle, Policy, Officer, Proposal, Payment, Claim,]
 
@@ -110,10 +100,9 @@ USE `insurancesystem`;
 DROP DATABASE `insurancesystem`;
 
 SELECT * FROM user;
+SELECT * FROM officer;
 SELECT * FROM vehicle;
 SELECT * FROM policy;
-SELECT * FROM officer;
 SELECT * FROM proposal;
 SELECT * FROM payment;
 SELECT * FROM claim;
-SELECT * FROM audit_log;

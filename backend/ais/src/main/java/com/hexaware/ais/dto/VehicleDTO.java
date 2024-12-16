@@ -6,6 +6,7 @@ import com.hexaware.ais.entity.Vehicle;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
+
 /*
  * @Author: Kishlay Kumar
  * Class: VehicleDTO

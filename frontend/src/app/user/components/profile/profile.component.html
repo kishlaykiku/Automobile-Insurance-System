@@ -1,1 +1,30 @@
-<p>profile works!</p>
+<div class="container mt-5 text-light" style="width: fit-content;">
+
+    <!-- Header -->
+    <h2 class="mb-4 d-flex justify-content-center align-items-center">Your Profile</h2>
+
+    <div *ngIf="isLoading" class="text-center text-light mt-3">
+        <span class="loader"></span>
+    </div>
+
+    <!-- Profile Section -->
+    <div *ngIf="!isLoading" class="card bg-dark text-light animate__animated animate__zoomIn animate__faster">
+        <div class="card-body d-flex align-items-center">
+
+            <!-- Dummy Profile Image -->
+            <img src="assets/profile-placeholder.png" alt="Profile" class="rounded-circle" style="width: 150px; height: 150px; margin-right: 20px;" />
+
+            <!-- Profile Details -->
+            <div class="border-start border-light ms-2 p-3" style="border-color: grey !important;">
+                <h5 class="d-inline-block p-1 rounded" style="background: #504f4f70;">{{ user.name }}</h5>
+                <p class="mb-1"><strong>Email: </strong><code>{{ user.email }}</code></p>
+                <p class="mb-1"><strong>Date of Birth: </strong><code>{{ user.dob | date }}</code></p>
+                <p class="mb-1"><strong>Address: </strong><code>{{ user.address }}</code></p>
+                <p class="mb-1"><strong>Pan Number: </strong><code>{{ user.panNo }}</code></p>
+                <p class="mb-1"><strong>Aadhaar Number: </strong><code>{{ user.aadharNo }}</code></p>
+                <p class="mb-1"><strong>Created On: </strong><code>{{ user.createdAt }}</code></p>
+            </div>
+
+        </div>
+    </div>
+</div>

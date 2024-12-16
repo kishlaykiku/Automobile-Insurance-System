@@ -16,6 +16,17 @@
         <div class="collapse navbar-collapse" id="navbarNav">
 
             <ul class="navbar-nav ms-auto">
+
+                <!-- Dashboard Link -->
+                <li class="nav-item" *ngIf="isLoggedIn">
+                    <a class="nav-link d-flex flex-row justify-content-center align-items-center gap-1" [routerLink]="dashboardLink" routerLinkActive="active"><i class="fa-solid fa-house" style="color: #fff;"></i>Dashboard</a>
+                </li>
+
+                <!-- Profile Link -->
+                <li class="nav-item" *ngIf="isLoggedIn">
+                    <a class="nav-link d-flex flex-row justify-content-center align-items-center gap-1 border-end border-light ms-2" style="margin-right: 8px; padding-right: 22px !important; border-color: grey !important;" [routerLink]="profileLink" routerLinkActive="active"><i class="fa-solid fa-user" style="color: #fff;"></i>Profile</a>
+                </li>
+
                 <!-- Will Appear Only When Someone is Logged In -->
                 <li class="nav-item" *ngIf="isLoggedIn">
                     <app-logout></app-logout>

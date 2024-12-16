@@ -22,4 +22,39 @@ export class PolicyService {
 
         return this.http.get(`${this.apiUrl}/policies/getall`, { headers });
     }
+
+    getActivePolicies(): Observable<any> {
+
+        return this.http.get(`${this.apiUrl}/get/statistics/active-policy`);
+    }
+
+    createPolicy(policyData: any): Observable<any> {
+
+        const token = this.authService.getToken();
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${token}`,
+        });
+
+        return this.http.post(`${this.apiUrl}/policies/create`, policyData, { headers });
+    }
+
+    updatePolicy(policyId: string, updatedPolicy: any): Observable<any> {
+
+        const token = this.authService.getToken();
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${token}`,
+        });
+    
+        return this.http.put(`${this.apiUrl}/policies/update/${policyId}`, updatedPolicy, { headers });
+    }
+    
+    deletePolicy(policyId: string): Observable<any> {
+
+        const token = this.authService.getToken();
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${token}`,
+        });
+    
+        return this.http.delete(`${this.apiUrl}/policies/delete/${policyId}`, { headers });
+    }
 }

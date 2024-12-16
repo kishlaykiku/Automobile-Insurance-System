@@ -2,6 +2,7 @@
 
     <h3 class="mb-4">Policies</h3>
 
+    <!-- Loader -->
     <div *ngIf="isLoading" class="text-center text-light mt-3">
         <span class="loader"></span>
     </div>
@@ -37,7 +38,7 @@
     </div>
 
     <!-- Policies Table -->
-    <table *ngIf="!isLoading" class="table table-dark table-hover">
+    <table *ngIf="!isLoading" class="table table-dark table-hover animate__animated animate__fadeIn animate__faster">
 
         <thead>
             <tr>

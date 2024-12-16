@@ -23,12 +23,10 @@ public class Proposal {
     @Column(name = "proposal_id", nullable = false, unique = true)
     private String proposalId;
 
-    @NotNull(message = "Submission date is required")
     @PastOrPresent(message = "Submission date cannot be in the future")
     @Column(name = "submission_date", nullable = false)
     private LocalDate submissionDate;
 
-    @NotBlank(message = "Status is required")
     @Column(name = "status", nullable = false)
     private String status;
 
@@ -51,7 +49,7 @@ public class Proposal {
     private Policy policy;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "officer_id")
+    @JoinColumn(name = "officer_id", nullable = false)
     private Officer officer;
 
     @PrePersist

@@ -28,6 +28,7 @@ export class ViewPoliciesComponent implements OnInit {
 
         this.fetchPolicies();
         this.applyFilter();
+        this.applySort();
     }
 
     fetchPolicies(): void {
@@ -77,7 +78,7 @@ export class ViewPoliciesComponent implements OnInit {
 
                 if (this.sortCriteria === 'policyNo') {
 
-                    return a.name.localeCompare(b.name);
+                    return a.policyNo.localeCompare(b.policyNo);
                 }
                 else if (this.sortCriteria === 'startDate') {
 

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet, RouterModule } from '@angular/router';
 import { HeaderComponent } from "./shared/components/header/header.component";
 import { AuthService } from './shared/services/auth.service';
 
@@ -7,7 +7,7 @@ import { AuthService } from './shared/services/auth.service';
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet, HeaderComponent],
+    imports: [RouterOutlet, HeaderComponent, RouterModule],
     templateUrl: './app.component.html',
     styleUrl: './app.component.css'
 })

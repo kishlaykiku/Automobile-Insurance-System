@@ -1,1 +1,190 @@
-<h1>Welcome Admin</h1>
+<div class="container mt-5 text-light">
+
+    <!-- Overview -->
+    <div class="d-flex flex-column mb-4">
+
+        <!-- Welcome Message -->
+        <h2 class="d-inline-block">Welcome, Admin!</h2>
+
+        <!-- Quick Actions Dropdown -->
+        <div class="d-inline-block mt-4">
+            <label for="quickActionsSelect" class="text-light me-2">Quick Actions:</label>
+            <select
+                id="quickActionsSelect"
+                class="form-select bg-dark text-light border-light"
+                style="width: auto; display: inline-block;"
+                (change)="onQuickActionSelect($event)">
+                <option value="" disabled selected>Select an action</option>
+                <option value="createPolicy">Create Policy</option>
+                <option value="viewNotifications">View Notifications</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Vertical space -->
+    <hr class="text-light" />
+
+    <!-- Dashboard Summary -->
+    <div>
+        <p class="text-light">Here are your management tools at a glance:</p>
+
+        <!-- Summary Cards -->
+        <div class="row mt-4 d-flex flex-row justify-content-center align-items-center">
+
+            <!-- View Policies Card -->
+            <div class="col-md-6 animate__animated animate__fadeInUp animate__faster">
+                <div class="card card-dash bg-secondary text-light" (click)="onViewPolicies()">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">View Policies</h5>
+                        <p class="card-text text-center">Manage all active and archived policies.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review Proposals Card -->
+            <div class="col-md-6 animate__animated animate__fadeInUp animate__faster">
+                <div class="card card-dash bg-secondary text-light" (click)="onReviewProposals()">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Review Proposals</h5>
+                        <p class="card-text text-center">Analyze and approve/reject submitted proposals.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reserved for Statistics -->
+            <div class="col-md-4 mt-3"></div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Create Policy Modal -->
+<div class="modal fade" id="createPolicyModal" tabindex="-1" aria-labelledby="createPolicyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-dark text-light">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="createPolicyModalLabel">Create Policy</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form (ngSubmit)="createPolicy()" #policyForm="ngForm">
+                <div class="modal-body">
+
+                    <!-- Policy Number -->
+                    <div class="mb-3">
+                        <label for="policyNo" class="form-label">Policy Number</label>
+                        <input
+                            type="text"
+                            id="policyNo"
+                            class="form-control bg-dark text-light"
+                            [(ngModel)]="policy.policyNo"
+                            name="policyNo"
+                            required/>
+                    </div>
+
+                    <!-- Policy Type -->
+                    <div class="mb-3">
+                        <label for="type" class="form-label">Type</label>
+                        <select
+                            id="type"
+                            class="form-select bg-dark text-light"
+                            [(ngModel)]="policy.type"
+                            name="type"
+                            required>
+                                <option value="" disabled selected>Select policy type</option>
+                                <option *ngFor="let type of policyTypes" [value]="type">{{ type }}</option>
+                        </select>
+                    </div>
+
+                    <!-- Base Premium -->
+                    <div class="mb-3">
+                        <label for="basePremium" class="form-label">Base Premium</label>
+                        <input
+                            type="number"
+                            id="basePremium"
+                            class="form-control bg-dark text-light"
+                            [(ngModel)]="policy.basePremium"
+                            name="basePremium"
+                            min="0.01"
+                            required/>
+                    </div>
+
+                    <!-- Features -->
+                    <div class="mb-3">
+                        <label for="features" class="form-label">Features</label>
+                        <textarea
+                            id="features"
+                            class="form-control bg-dark text-light"
+                            [(ngModel)]="policy.features"
+                            name="features">
+                        </textarea>
+                    </div>
+
+                    <!-- Add Ons -->
+                    <div class="mb-3">
+                        <label for="addOns" class="form-label">Add Ons</label>
+                        <select
+                            id="addOns"
+                            class="form-select bg-dark text-light"
+                            [(ngModel)]="policy.addOns"
+                            name="addOns"
+                            multiple>
+                                <option *ngFor="let addOn of addOns" [value]="addOn">{{ addOn }}</option>
+                        </select>
+                    </div>
+
+                    <!-- Start Date -->
+                    <div class="mb-3">
+                        <label for="startDate" class="form-label">Start Date</label>
+                        <input
+                            type="date"
+                            id="startDate"
+                            class="form-control bg-dark text-light"
+                            [(ngModel)]="policy.startDate"
+                            name="startDate"
+                            required/>
+                    </div>
+
+                    <!-- End Date -->
+                    <div class="mb-3">
+                        <label for="endDate" class="form-label">End Date</label>
+                        <input
+                            type="date"
+                            id="endDate"
+                            class="form-control bg-dark text-light"
+                            [(ngModel)]="policy.endDate"
+                            name="endDate"
+                            required/>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select
+                            id="status"
+                            class="form-select bg-dark text-light"
+                            [(ngModel)]="policy.status"
+                            name="status"
+                            required>
+                                <option value="" disabled selected>Select status</option>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" style="background: #ff3d00 !important;" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="submit" class="btn btn-secondary" [disabled]="policyForm.invalid">
+                        Create Policy
+                    </button>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

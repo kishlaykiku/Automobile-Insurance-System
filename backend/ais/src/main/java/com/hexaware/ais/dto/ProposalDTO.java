@@ -8,9 +8,8 @@ import com.hexaware.ais.entity.User;
 import com.hexaware.ais.entity.Vehicle;
 import com.hexaware.ais.entity.Policy;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
+
 
 /*
  * @Author: Kishlay Kumar
@@ -23,11 +22,9 @@ public class ProposalDTO {
 
     private String proposalId;
 
-    @NotNull(message = "Submission date is required")
     @PastOrPresent(message = "Submission date cannot be in the future")
     private LocalDate submissionDate;
 
-    @NotBlank(message = "Status is required")
     private String status;
 
     private String additionalDocs;

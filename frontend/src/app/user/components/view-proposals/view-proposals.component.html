@@ -32,13 +32,14 @@
     </div>
 
     <!-- Proposals Table -->
-    <table *ngIf="!isLoading" class="table table-dark table-hover">
+    <table *ngIf="!isLoading" class="table table-dark table-hover animate__animated animate__fadeIn animate__faster">
 
         <thead>
             <tr>
                 <th>Proposal ID</th>
                 <th>Policy No</th>
                 <th>Status</th>
+                <th>Vehicle</th>
                 <th>Submission Date</th>
                 <th>Actions</th>
             </tr>
@@ -49,10 +50,11 @@
                 <td>{{ proposal.proposalId }}</td>
                 <td>{{ proposal.policy.policyNo || 'N/A'}}</td>
                 <td>{{ proposal.status }}</td>
+                <td>{{ proposal.vehicle.registrationNo }}</td>
                 <td>{{ proposal.submissionDate | date }}</td>
                 <td>
                     <button class="btn btn-light btn-sm" (click)="viewDetails(proposal)">View</button>
-                    <button class="btn btn-danger btn-sm ms-2" (click)="deleteProposal(proposal.proposalId)">Delete</button>
+                    <button class="btn btn-danger btn-sm ms-2" style="background: #ff3d00 !important;" (click)="deleteProposal(proposal.proposalId)">Delete</button>
                 </td>
             </tr>
         </tbody>
