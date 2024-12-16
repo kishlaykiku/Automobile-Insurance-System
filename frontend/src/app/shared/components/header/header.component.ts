@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LogoutComponent } from "../logout/logout.component";
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
@@ -12,7 +12,7 @@ import { RouterModule } from '@angular/router';
     templateUrl: './header.component.html',
     styleUrl: './header.component.css'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
 
     isAdmin: boolean = false;
     dashboardLink: string = '/user/dashboard';
@@ -25,7 +25,14 @@ export class HeaderComponent {
 
         this.authService.loggedIn$.subscribe((status) => {
             this.isLoggedIn = status;
+
+            if (this.isLoggedIn) {
+                this.checkUserRole();
+            }
         });
+    }
+
+    checkUserRole(): void {
 
         const token = this.authService.getToken();
         if (token) {
@@ -37,6 +44,11 @@ export class HeaderComponent {
 
                 this.dashboardLink = '/officer/dashboard';
                 this.profileLink = '/officer/profile';
+            }
+            else {
+
+                this.dashboardLink = '/user/dashboard';
+                this.profileLink = '/user/profile';
             }
         }
     }

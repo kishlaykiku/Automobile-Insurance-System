@@ -26,16 +26,20 @@ export class ProfileComponent implements OnInit {
         const token = this.authService.getToken();
 
         if (token) {
+
             const decodedToken: any = this.authService.decodeToken(token);
             const userId = decodedToken?.userId;
 
             if (userId) {
+
                 this.userService.getUserById(userId).subscribe({
                     next: (response) => {
+
                         this.user = response;
                         this.isLoading = false;
                     },
                     error: (error) => {
+
                         console.error('Error fetching user profile:', error);
                         this.isLoading = false;
                     },

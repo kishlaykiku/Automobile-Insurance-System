@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OfficerService } from '../../../shared/services/officer.service';
 
+
 @Component({
     selector: 'app-profile',
     standalone: true,

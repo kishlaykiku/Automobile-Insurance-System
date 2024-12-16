@@ -31,7 +31,7 @@ export class AuthService {
 
         if (typeof window === 'undefined') {
 
-            return false; // Return false when running on the server
+            return false;
         }
         return !!localStorage.getItem('token');
     }
@@ -82,6 +82,17 @@ export class AuthService {
         localStorage.removeItem('auth_token'); // Removing token from local storage
         this.loggedInSubject.next(false); // Updating login state
         return this.http.post(`${this.apiUrl}/auth/logout`, {}, { responseType: 'text' });
+    }
+
+    isTokenExpired(): boolean {
+
+        const token = this.getToken();
+        if (!token) return true;
+    
+        const decodedToken: any = this.decodeToken(token);
+        const expiry = decodedToken?.exp ? decodedToken.exp * 1000 : 0;
+
+        return expiry < Date.now();
     }
     
 }
