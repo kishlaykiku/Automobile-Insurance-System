@@ -1,31 +1,84 @@
 # Automobile Insurance System
 
-- # Backend
+Automobile Insurance System is a web application built with Spring Boot and Angular that allows users to manage insurance policies, proposals, claims, vehicles, and payments seamlessly.
 
-- # Frontend
+## Features
 
-    - <ins> This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.12. </ins>
+- **User Management**: Users can register, log in, and manage their profiles.
+- **Policy Management**: View available insurance policies.
+- **Proposal Submission**: Users can submit insurance proposals for approval.
+- **Claim Processing**: Users can submit claims for insured vehicles.
+- **Payments**: Users can make premium payments securely.
+- **Admin Dashboard**: Officers can approve/reject proposals and manage claims.
 
-    - ## Development server
 
-        - Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Technologies Used
 
-    - ## Code scaffolding
+### Frontend
+- Angular (Standalone Components)
+- Bootstrap (For UI Styling)
+- Typescript
+- RouterModule (For Navigation)
+- FormsModule (For Handling Forms)
 
-        - Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Backend
+- Spring Boot
+- Spring Data JPA
+- MySQL
+- REST APIs
+- Spring Security
+- JWT (JSON Web Token Authentication)
 
-    - ## Build
 
-        - Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Installation
 
-    - ## Running unit tests
+### Prerequisites
+- Node.js (v16+ recommended)
+- Angular CLI (if not installed, run npm install -g @angular/cli)
+- Java 17+
+- Maven
+- MySQL Database
 
-        - Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Steps to Run Locally
+#### Backend
+1. Navigate to the backend folder:
+   ```console
+   cd automobile-insurance-system/backend
+   ```
+2. Configure ```application.properties``` with database credentials:
+   ```console
+   spring.datasource.url=jdbc:mysql://localhost:3306/insurancesystem
+   spring.datasource.username=yourusername
+   spring.datasource.password=yourpassword
+   spring.jpa.hibernate.ddl-auto=update
+   ```
+3. Build and run the Spring Boot application:
+   ```console
+   mvn spring-boot:run
+   ```
+4. The backend will be available at ```http://localhost:8080/```.
 
-    - ## Running end-to-end tests
+#### Frontend
+1. Clone the repository:
+   ```console
+   git clone https://github.com/kishlaykiku/Automobile-Insurance-System.git
+   cd automobile-insurance-system/frontend
+   ```
+2. Install dependencies:
+   ```console
+   npm install
+   ```
+3. Start the development server:
+   ```console
+   ng serve
+   ```
+4. Open your browser and navigate to ```http://localhost:4200/```.
 
-        - Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## Usage
 
-    - ## Further help
-
-        - To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **User Registration & Login**: Users can sign up and log in securely.
+- **Managing Policies**: View available policies and select the best fit.
+- **Proposal Submission**: Fill out the insurance proposal form and submit.
+- **Claim Processing**: Submit claims and track their approval status.
+- **Payments**: Make premium payments online.
+- **Admin Panel**: Officers can approve/reject proposals and claims.
