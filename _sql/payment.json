@@ -1,0 +1,34 @@
+[
+  {
+    "payment_id": "251833c5-55f6-41a2-bab2-d574af777e42",
+    "amount": 7500,
+    "payment_date": "2024-11-24",
+    "payment_method": "Debit Card",
+    "status": "Completed",
+    "proposal_id": "e1faae58-cc38-43db-8ab0-d207528497db"
+  },
+  {
+    "payment_id": "3827e05e-d324-4e59-b6ab-cf152d27b653",
+    "amount": 6000,
+    "payment_date": "2024-12-08",
+    "payment_method": "Credit Card",
+    "status": "Completed",
+    "proposal_id": "f8e79d14-c657-44d1-9c92-653ca4be62f4"
+  },
+  {
+    "payment_id": "3ad9e66c-b018-4258-8f22-f172de08cf00",
+    "amount": 12000,
+    "payment_date": "2024-12-08",
+    "payment_method": "Debit Card",
+    "status": "Completed",
+    "proposal_id": "e1faae58-cc38-43db-8ab0-d207528497db"
+  },
+  {
+    "payment_id": "8d75405b-c619-42c9-9a12-0e3561b6dfe3",
+    "amount": 6000,
+    "payment_date": "2024-12-08",
+    "payment_method": "Credit Card",
+    "status": "Completed",
+    "proposal_id": "f8e79d14-c657-44d1-9c92-653ca4be62f4"
+  }
+]

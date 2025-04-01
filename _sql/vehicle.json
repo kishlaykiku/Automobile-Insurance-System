@@ -1,0 +1,50 @@
+[
+  {
+    "vehicle_id": "09cb74c7-07b0-492f-ad96-c537d10723fa",
+    "model": "Maruti Swift",
+    "registration_no": "BR01XY4467",
+    "type": "Car",
+    "year": 2015,
+    "user_id": "3331040f-3701-4cfe-a28c-d9a8d8dc7f8b"
+  },
+  {
+    "vehicle_id": "2570897f-1f52-4dd3-a980-a843887b0d27",
+    "model": "Toyota Corolla",
+    "registration_no": "XYZ1234",
+    "type": "Car",
+    "year": 2018,
+    "user_id": "6e06f77a-1ea5-4bd2-9e8b-a77a000b060d"
+  },
+  {
+    "vehicle_id": "7e83cbb8-87e9-41ad-9898-80f9580006e6",
+    "model": "Maruti Celerio",
+    "registration_no": "BR01CD4567",
+    "type": "Car",
+    "year": 2017,
+    "user_id": "3331040f-3701-4cfe-a28c-d9a8d8dc7f8b"
+  },
+  {
+    "vehicle_id": "92f25d7d-3e85-4bf7-88e2-a79e6d78a133",
+    "model": "Toyota Innova",
+    "registration_no": "MH12AB1234",
+    "type": "Car",
+    "year": 2017,
+    "user_id": "3331040f-3701-4cfe-a28c-d9a8d8dc7f8b"
+  },
+  {
+    "vehicle_id": "a94a63e4-b109-4da0-9530-82bff2752fb8",
+    "model": "Maruti Celerio",
+    "registration_no": "TN01ZY4467",
+    "type": "Car",
+    "year": 2025,
+    "user_id": "3331040f-3701-4cfe-a28c-d9a8d8dc7f8b"
+  },
+  {
+    "vehicle_id": "f1fca628-282f-41e8-8cbc-2e1a8b08478a",
+    "model": "Maruti Dzire",
+    "registration_no": "TN01CD5566",
+    "type": "Car",
+    "year": 2025,
+    "user_id": "d66126ff-03b1-4c20-b99c-9d4cfe2c4306"
+  }
+]
