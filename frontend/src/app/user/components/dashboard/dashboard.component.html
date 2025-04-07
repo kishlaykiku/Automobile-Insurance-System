@@ -179,7 +179,7 @@
                             required>
                                 <option value="" disabled selected>Select a policy</option>
                                 <option *ngFor="let policy of policies" [value]="policy.policyId">
-                                    {{ policy.policyNo }} - {{ policy.status }}
+                                    {{ policy.policyName }} - {{ policy.status }}
                                 </option>
                         </select>
                     </div>
