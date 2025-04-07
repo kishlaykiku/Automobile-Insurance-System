@@ -25,7 +25,7 @@ VALUES
 ('7047d18f-15b2-4a37-aa53-144d4f2741b2', 'DriveSafe Complete Coverage', 'Roadside Assistance, Engine Protection', 5000, '2024-11-30', '2045-12-01', 'Covers accidents, theft, and natural disasters', 'POL12345678', false, '2025-11-30', '2024-12-01', 'Active', 'Comprehensive'),
 ('8bd4e2ba-b7d8-4560-a190-a6c90fadae77', 'FlexiProtect Third-Party Plan', 'Engine Protection, Consumables Cover, Zero Depreciation Cover', 4000, '2024-12-17', '2040-01-17', 'Cancel anytime, Full refund', 'POL9991', false, '2025-06-17', '2024-12-17', 'Active', 'Third-Party Liability Insurance'),
 ('a8048ca6-0593-423a-b955-5e7e3eeb8bfe', 'InjuryShield Personal Cover', 'Engine Protection, Daily Allowance Cover, Repair of Accessories', 1200, '2024-12-16', '2040-01-16', 'We will not steal your money, Full refund on cancellation', 'POL12345654', false, '2025-06-16', '2024-12-16', 'Active', 'Personal Injury Protection'),
-('f949fc52-8621-40ba-a7e5-4243f108515a', 'CrashCare Collision Advantage,' 'Engine Protection, Daily Allowance Cover, Consumables Cover, Roadside Assistance Cover', 8000, '2024-12-17', '2050-01-17', 'Cancel anytime, Full refund', 'POL9981', false, '2025-06-17', '2024-12-17', 'Active', 'Collision Insurance')
+('f949fc52-8621-40ba-a7e5-4243f108515a', 'CrashCare Collision Advantage', 'Engine Protection, Daily Allowance Cover, Consumables Cover, Roadside Assistance Cover', 8000, '2024-12-17', '2050-01-17', 'Cancel anytime, Full refund', 'POL9981', false, '2025-06-17', '2024-12-17', 'Active', 'Collision Insurance')
 ;
  
 INSERT INTO proposal (proposal_id, additional_docs, remarks, status, submission_date, officer_id, policy_id, user_id, vehicle_id)
