@@ -29,7 +29,7 @@
                 [(ngModel)]="sortCriteria"
                 (change)="applySort()">
                     <option value="default">Default</option>
-                    <option value="policyNo">Policy No</option>
+                    <option value="policyName">Policy Name</option>
                     <option value="startDate">Start Date</option>
                     <option value="endDate">End Date</option>
             </select>
@@ -43,7 +43,7 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Policy No</th>
+                <th>Policy Name</th>
                 <th>Status</th>
                 <th>Start Date</th>
                 <th>End Date</th>
@@ -54,7 +54,7 @@
         <tbody>
             <tr *ngFor="let policy of filteredPolicies; let i = index">
                 <td>{{ i + 1 }}</td>
-                <td>{{ policy.policyNo }}</td>
+                <td>{{ policy.policyName }}</td>
                 <td>{{ policy.status }}</td>
                 <td>{{ policy.startDate | date }}</td>
                 <td>{{ policy.endDate | date }}</td>
@@ -81,6 +81,7 @@
 
             <div class="modal-body">
                 <p><strong>Policy No:</strong> {{ selectedPolicy?.policyNo }}</p>
+                <p><strong>Policy Name:</strong> {{ selectedPolicy?.policyName }}</p>
                 <p><strong>Features:</strong> {{ selectedPolicy?.features }}</p>
                 <p><strong>Premium:</strong> {{ selectedPolicy?.basePremium | currency:'INR' }}</p>
                 <p><strong>Type:</strong> {{ selectedPolicy?.type }}</p>

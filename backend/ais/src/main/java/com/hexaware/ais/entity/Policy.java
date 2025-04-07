@@ -27,6 +27,10 @@ public class Policy {
     @Column(name = "policy_no", nullable = false, unique = true)
     private String policyNo;
 
+    @NotBlank(message = "Policy name is required")
+    @Column(name = "policy_name", nullable = false)
+    private String policyName;
+
     @NotBlank(message = "Policy type is required")
     @Column(name = "type", nullable = false)
     private String type;
@@ -91,6 +95,14 @@ public class Policy {
     }
     public void setPolicyNo(String policyNo) {
         this.policyNo = policyNo;
+    }
+
+    // Getter and Setter for policyName
+    public String getPolicyName() {
+        return policyName;
+    }
+    public void setPolicyName(String policyName) {
+        this.policyName = policyName;
     }
 
     // Getter and Setter for type

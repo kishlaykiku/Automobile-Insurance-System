@@ -10,3 +10,4 @@ public class AisApplication {
 		SpringApplication.run(AisApplication.class, args);
 	}
 }
+// http://localhost:8080/swagger-ui/index.html

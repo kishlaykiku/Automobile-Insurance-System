@@ -76,9 +76,9 @@ export class ViewPoliciesComponent implements OnInit {
 
             this.filteredPolicies.sort((a, b) => {
 
-                if (this.sortCriteria === 'policyNo') {
+                if (this.sortCriteria === 'policyName') {
 
-                    return a.policyNo.localeCompare(b.policyNo);
+                    return a.policyName.localeCompare(b.policyName);
                 }
                 else if (this.sortCriteria === 'startDate') {
 

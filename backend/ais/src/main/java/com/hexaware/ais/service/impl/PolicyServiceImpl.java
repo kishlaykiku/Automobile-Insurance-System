@@ -48,6 +48,7 @@ public class PolicyServiceImpl implements IPolicyService {
         Policy policy = new Policy();
 
         policy.setPolicyNo(policyDTO.getPolicyNo());
+        policy.setPolicyName(policyDTO.getPolicyName());
         policy.setType(policyDTO.getType());
         policy.setBasePremium(policyDTO.getBasePremium());
         policy.setFeatures(policyDTO.getFeatures());
@@ -153,6 +154,7 @@ public class PolicyServiceImpl implements IPolicyService {
             );
 
         existingPolicy.setPolicyNo(policyDTO.getPolicyNo());
+        existingPolicy.setPolicyName(policyDTO.getPolicyName());
         existingPolicy.setType(policyDTO.getType());
         existingPolicy.setBasePremium(policyDTO.getBasePremium());
         existingPolicy.setFeatures(policyDTO.getFeatures());

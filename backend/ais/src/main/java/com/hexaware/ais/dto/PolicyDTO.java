@@ -25,6 +25,9 @@ public class PolicyDTO {
     @NotBlank(message = "Policy number is required")
     private String policyNo;
 
+    @NotBlank(message = "Policy name is required")
+    private String policyName;
+
     @NotBlank(message = "Policy type is required")
     private String type;
 
@@ -66,6 +69,7 @@ public class PolicyDTO {
 
         this.policyId = policy.getPolicyId();
         this.policyNo = policy.getPolicyNo();
+        this.policyName = policy.getPolicyName();
         this.type = policy.getType();
         this.basePremium = policy.getBasePremium();
         this.features = policy.getFeatures();
@@ -91,6 +95,13 @@ public class PolicyDTO {
     }
     public void setPolicyNo(String policyNo) {
         this.policyNo = policyNo;
+    }
+
+    public String getPolicyName() {
+        return policyName;
+    }
+    public void setPolicyName(String policyName) {
+        this.policyName = policyName;
     }
 
     public String getType() {
@@ -165,6 +176,7 @@ public class PolicyDTO {
 
         policy.setPolicyId(this.policyId);
         policy.setPolicyNo(this.policyNo);
+        policy.setPolicyName(this.policyName);
         policy.setType(this.type);
         policy.setBasePremium(this.basePremium);
         policy.setFeatures(this.features);
