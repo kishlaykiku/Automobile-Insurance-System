@@ -1,13 +1,18 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './shared/guards/auth.guard';
+import { HomeComponent } from './home/home.component';
 
 
 export const routes: Routes = [
 
     {
         path: '',
-        redirectTo: '/auth/login',
+        redirectTo: '/home',
         pathMatch: 'full',
+    },
+    {
+        path: 'home',
+        component: HomeComponent,
     },
     {
         path: 'auth',
@@ -27,6 +32,6 @@ export const routes: Routes = [
     },
     {
         path: '**',
-        redirectTo: '/auth/login',
+        redirectTo: '/home',
     },
 ];
